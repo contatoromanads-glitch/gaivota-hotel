@@ -17,7 +17,7 @@ const Footer = () => {
             <Link to="/" className="inline-block mb-3">
               <img src={logoGaivota} alt="Gaivota Hotel" className="h-16 w-auto" />
             </Link>
-            <p className="text-sm leading-relaxed mb-4">
+            <p className="text-base leading-relaxed mb-4">
               Conforto, natureza e hospitalidade no coração da Amazônia Paraense.
             </p>
             <a
