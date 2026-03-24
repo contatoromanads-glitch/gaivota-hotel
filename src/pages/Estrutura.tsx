@@ -7,6 +7,8 @@ import hotelRecepcao from "@/assets/hotel-recepcao.jpeg";
 import hotelCafeArea from "@/assets/hotel-cafe-area.jpeg";
 import hotelLobby from "@/assets/hotel-lobby.jpeg";
 import hotelEscada from "@/assets/hotel-escada.jpeg";
+import hotelHallAmazonia from "@/assets/hotel-hall-amazonia.jpeg";
+import hotelRestaurante2 from "@/assets/hotel-restaurante2.jpeg";
 
 const amenities = [
   { icon: Building2, label: "46 Apartamentos" },
@@ -84,9 +86,11 @@ const Estrutura = () => (
 
     {/* Gallery */}
     <section className="py-12">
-      <div className="container grid md:grid-cols-2 gap-4">
+      <div className="container grid grid-cols-2 md:grid-cols-3 gap-4">
         <img src={hotelRecepcao} alt="Recepção" className="rounded-lg shadow-md w-full h-64 object-cover" />
         <img src={hotelCafeArea} alt="Área do Café" className="rounded-lg shadow-md w-full h-64 object-cover" />
+        <img src={hotelHallAmazonia} alt="Hall com quadro amazônico" className="rounded-lg shadow-md w-full h-64 object-cover" />
+        <img src={hotelRestaurante2} alt="Restaurante" className="rounded-lg shadow-md w-full h-64 object-cover" />
         <img src={hotelEscada} alt="Escadaria" className="rounded-lg shadow-md w-full h-64 object-cover" />
         <img src={hotelLobby} alt="Hall" className="rounded-lg shadow-md w-full h-64 object-cover" />
       </div>
