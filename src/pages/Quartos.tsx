@@ -1,22 +1,28 @@
 import Layout from "@/components/Layout";
-import hotelQuarto from "@/assets/hotel-quarto.jpeg";
-import hotelBanheiro from "@/assets/hotel-banheiro.jpeg";
 import hotelCorredor from "@/assets/hotel-corredor.jpeg";
+import hotelBanheiro from "@/assets/hotel-banheiro.jpeg";
+import hotelBanheiro2 from "@/assets/hotel-banheiro2.jpeg";
+import hotelQuarto from "@/assets/hotel-quarto.jpeg";
 import hotelQuartoIndividual from "@/assets/hotel-quarto-individual.jpeg";
 import hotelQuartoIndividual2 from "@/assets/hotel-quarto-individual2.jpeg";
+import hotelQuartoIndividual3 from "@/assets/hotel-quarto-individual3.jpeg";
 import hotelQuartoMutum from "@/assets/hotel-quarto-mutum.jpeg";
 import hotelQuartoColeirinho from "@/assets/hotel-quarto-coleirinho.jpeg";
 import hotelQuartoTamandua from "@/assets/hotel-quarto-tamandua.jpeg";
 import hotelQuartoBeijaflor from "@/assets/hotel-quarto-beijaflor.jpeg";
 import hotelQuartoPeixeboi from "@/assets/hotel-quarto-peixeboi.jpeg";
 import hotelQuartoCasal from "@/assets/hotel-quarto-casal.jpeg";
+import hotelQuartoCapivara from "@/assets/hotel-quarto-capivara.jpeg";
+import hotelQuartoAnta from "@/assets/hotel-quarto-anta.jpeg";
+import hotelQuartoSagui from "@/assets/hotel-quarto-sagui.jpeg";
+import hotelQuartoOncaNegra from "@/assets/hotel-quarto-oncanegra.jpeg";
 
 const rooms = [
   {
     name: "Quarto Individual Deluxe",
     beds: "1 cama de solteiro",
     size: "",
-    image: hotelQuartoIndividual,
+    image: hotelQuartoCapivara,
     amenities: ["Ar-condicionado", "TV tela plana", "Wi-Fi", "Frigobar", "Banheiro privativo", "Mesa de trabalho", "Guarda-roupa"],
     highlight: false,
   },
@@ -24,7 +30,7 @@ const rooms = [
     name: "Quarto Deluxe com 2 Camas",
     beds: "2 camas de solteiro",
     size: "16 m²",
-    image: hotelQuartoMutum,
+    image: hotelQuartoSagui,
     amenities: ["Ar-condicionado", "TV tela plana", "Wi-Fi", "Frigobar", "Banheiro privativo"],
     highlight: false,
   },
@@ -40,7 +46,7 @@ const rooms = [
     name: "Quarto Triplo Deluxe",
     beds: "1 solteiro + 1 casal",
     size: "",
-    image: hotelQuartoColeirinho,
+    image: hotelQuartoOncaNegra,
     amenities: ["Ar-condicionado", "TV tela plana", "Wi-Fi", "Frigobar", "Banheiro privativo"],
     highlight: false,
   },
@@ -48,7 +54,7 @@ const rooms = [
     name: "Quarto Triplo Luxo",
     beds: "3 hóspedes",
     size: "20 m²",
-    image: hotelQuartoTamandua,
+    image: hotelQuartoMutum,
     amenities: ["Ar-condicionado", "TV tela plana", "Wi-Fi", "Frigobar", "Banheiro privativo"],
     highlight: false,
   },
@@ -56,10 +62,23 @@ const rooms = [
     name: "Quarto Quádruplo Deluxe",
     beds: "4 hóspedes",
     size: "",
-    image: hotelQuartoCasal,
+    image: hotelQuartoAnta,
     amenities: ["Wi-Fi", "Ar-condicionado", "TV tela plana", "Frigobar", "Banheiro privativo"],
     highlight: false,
   },
+];
+
+const galleryImages = [
+  { src: hotelQuarto, alt: "Quarto decorado com cisnes de toalha" },
+  { src: hotelQuartoPeixeboi, alt: "Quarto Peixe-Boi" },
+  { src: hotelQuartoColeirinho, alt: "Quarto Coleirinho" },
+  { src: hotelQuartoTamandua, alt: "Quarto Tamanduá Bandeira" },
+  { src: hotelQuartoIndividual, alt: "Quarto Individual com TV e frigobar" },
+  { src: hotelQuartoIndividual2, alt: "Quarto Individual" },
+  { src: hotelQuartoIndividual3, alt: "Quarto com espelho e frigobar" },
+  { src: hotelQuartoCasal, alt: "Quarto de Casal" },
+  { src: hotelBanheiro, alt: "Banheiro com pastilhas vermelhas" },
+  { src: hotelBanheiro2, alt: "Banheiro privativo" },
 ];
 
 const Quartos = () => (
@@ -82,27 +101,15 @@ const Quartos = () => (
     <section className="py-12 bg-warm">
       <div className="container max-w-3xl text-center">
         <p className="text-muted-foreground leading-relaxed">
-          Cada quarto é um convite ao relaxamento, com decoração inspirada na fauna e flora da Amazônia. 
+          Cada quarto é um convite ao relaxamento, com decoração inspirada na fauna e flora da Amazônia.
           Acomodações espaçosas, climatizadas e equipadas com aquecimento de água solar, frigobar e banheiro privativo.
           Todos os quartos incluem <strong className="text-foreground">café da manhã regional</strong>.
         </p>
       </div>
     </section>
 
-    {/* Gallery */}
-    <section className="py-12">
-      <div className="container">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-12">
-          <img src={hotelQuarto} alt="Quarto decorado" className="rounded-lg shadow-md w-full h-44 object-cover" />
-          <img src={hotelQuartoPeixeboi} alt="Quarto Peixe-Boi" className="rounded-lg shadow-md w-full h-44 object-cover" />
-          <img src={hotelQuartoIndividual2} alt="Quarto Individual" className="rounded-lg shadow-md w-full h-44 object-cover" />
-          <img src={hotelBanheiro} alt="Banheiro" className="rounded-lg shadow-md w-full h-44 object-cover" />
-        </div>
-      </div>
-    </section>
-
     {/* Rooms Grid */}
-    <section className="pb-16">
+    <section className="py-16">
       <div className="container">
         <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">Tipos de Quartos</h2>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -113,12 +120,10 @@ const Quartos = () => (
                 room.highlight ? "border-primary bg-primary/5" : "bg-card"
               }`}
             >
-              <img src={room.image} alt={room.name} className="w-full h-48 object-cover" />
+              <img src={room.image} alt={room.name} className="w-full h-52 object-cover" />
               <div className="p-6">
                 {room.highlight && (
-                  <span className="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">
-                    ★ Destaque
-                  </span>
+                  <span className="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">★ Destaque</span>
                 )}
                 <h3 className="font-display text-lg font-semibold mb-1">{room.name}</h3>
                 <p className="text-sm text-muted-foreground mb-1">{room.beds}</p>
@@ -146,6 +151,23 @@ const Quartos = () => (
         <p className="text-xs text-muted-foreground text-center mt-8">
           * Preços são referência e podem variar conforme temporada. Nenhum quarto possui cofre.
         </p>
+      </div>
+    </section>
+
+    {/* Gallery */}
+    <section className="py-16 bg-warm">
+      <div className="container">
+        <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">Galeria de Fotos</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+          {galleryImages.map((img) => (
+            <img
+              key={img.alt}
+              src={img.src}
+              alt={img.alt}
+              className="rounded-lg shadow-sm w-full h-40 object-cover hover:shadow-md transition-shadow"
+            />
+          ))}
+        </div>
       </div>
     </section>
   </Layout>

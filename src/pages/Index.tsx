@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Leaf, MapPin, Heart, Coffee, ArrowRight } from "lucide-react";
-import hotelFachada from "@/assets/hotel-fachada.jpeg";
+import hotelFachada from "@/assets/hotel-fachada2.jpeg";
 import hotelLobby from "@/assets/hotel-lobby.jpeg";
 import hotelCafeManha from "@/assets/hotel-cafe-manha.jpeg";
+import hotelCafeManha2 from "@/assets/hotel-cafe-manha2.jpeg";
 import hotelQuarto from "@/assets/hotel-quarto.jpeg";
 import hotelCafeArea from "@/assets/hotel-cafe-area.jpeg";
 import hotelRestaurante from "@/assets/hotel-restaurante.jpeg";
+import hotelMataAtlantica from "@/assets/hotel-mata-atlantica.jpeg";
 
 const highlights = [
   { icon: Leaf, title: "Experiência Amazônica", desc: "Decoração e ambiente inspirados na riqueza da fauna e flora local." },
@@ -93,8 +95,8 @@ const Index = () => {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <img src={hotelLobby} alt="Lobby do Hotel" className="rounded-lg shadow-lg w-full h-48 object-cover" />
-              <img src={hotelRestaurante} alt="Restaurante" className="rounded-lg shadow-lg w-full h-48 object-cover mt-8" />
-              <img src={hotelCafeManha} alt="Café da Manhã" className="rounded-lg shadow-lg w-full h-48 object-cover" />
+              <img src={hotelMataAtlantica} alt="Decoração Mata Atlântica" className="rounded-lg shadow-lg w-full h-48 object-cover mt-8" />
+              <img src={hotelCafeManha2} alt="Café da Manhã Regional" className="rounded-lg shadow-lg w-full h-48 object-cover" />
               <img src={hotelCafeArea} alt="Área do Café" className="rounded-lg shadow-lg w-full h-48 object-cover mt-8" />
             </div>
           </div>
