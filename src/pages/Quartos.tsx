@@ -1,14 +1,22 @@
 import Layout from "@/components/Layout";
-import { Wifi, Wind, Tv, Coffee, Bath, Snowflake } from "lucide-react";
 import hotelQuarto from "@/assets/hotel-quarto.jpeg";
 import hotelBanheiro from "@/assets/hotel-banheiro.jpeg";
 import hotelCorredor from "@/assets/hotel-corredor.jpeg";
+import hotelQuartoIndividual from "@/assets/hotel-quarto-individual.jpeg";
+import hotelQuartoIndividual2 from "@/assets/hotel-quarto-individual2.jpeg";
+import hotelQuartoMutum from "@/assets/hotel-quarto-mutum.jpeg";
+import hotelQuartoColeirinho from "@/assets/hotel-quarto-coleirinho.jpeg";
+import hotelQuartoTamandua from "@/assets/hotel-quarto-tamandua.jpeg";
+import hotelQuartoBeijaflor from "@/assets/hotel-quarto-beijaflor.jpeg";
+import hotelQuartoPeixeboi from "@/assets/hotel-quarto-peixeboi.jpeg";
+import hotelQuartoCasal from "@/assets/hotel-quarto-casal.jpeg";
 
 const rooms = [
   {
     name: "Quarto Individual Deluxe",
     beds: "1 cama de solteiro",
     size: "",
+    image: hotelQuartoIndividual,
     amenities: ["Ar-condicionado", "TV tela plana", "Wi-Fi", "Frigobar", "Banheiro privativo", "Mesa de trabalho", "Guarda-roupa"],
     highlight: false,
   },
@@ -16,6 +24,7 @@ const rooms = [
     name: "Quarto Deluxe com 2 Camas",
     beds: "2 camas de solteiro",
     size: "16 m²",
+    image: hotelQuartoMutum,
     amenities: ["Ar-condicionado", "TV tela plana", "Wi-Fi", "Frigobar", "Banheiro privativo"],
     highlight: false,
   },
@@ -23,6 +32,7 @@ const rooms = [
     name: "Quarto Deluxe Casal",
     beds: "1 cama de casal",
     size: "50 m²",
+    image: hotelQuartoBeijaflor,
     amenities: ["Ar-condicionado", "TV tela plana", "Wi-Fi", "Frigobar", "Banheira", "Hidromassagem", "Banheiro privativo"],
     highlight: true,
   },
@@ -30,6 +40,7 @@ const rooms = [
     name: "Quarto Triplo Deluxe",
     beds: "1 solteiro + 1 casal",
     size: "",
+    image: hotelQuartoColeirinho,
     amenities: ["Ar-condicionado", "TV tela plana", "Wi-Fi", "Frigobar", "Banheiro privativo"],
     highlight: false,
   },
@@ -37,6 +48,7 @@ const rooms = [
     name: "Quarto Triplo Luxo",
     beds: "3 hóspedes",
     size: "20 m²",
+    image: hotelQuartoTamandua,
     amenities: ["Ar-condicionado", "TV tela plana", "Wi-Fi", "Frigobar", "Banheiro privativo"],
     highlight: false,
   },
@@ -44,6 +56,7 @@ const rooms = [
     name: "Quarto Quádruplo Deluxe",
     beds: "4 hóspedes",
     size: "",
+    image: hotelQuartoCasal,
     amenities: ["Wi-Fi", "Ar-condicionado", "TV tela plana", "Frigobar", "Banheiro privativo"],
     highlight: false,
   },
@@ -79,10 +92,11 @@ const Quartos = () => (
     {/* Gallery */}
     <section className="py-12">
       <div className="container">
-        <div className="grid md:grid-cols-3 gap-4 mb-12">
-          <img src={hotelQuarto} alt="Quarto" className="rounded-lg shadow-md w-full h-56 object-cover" />
-          <img src={hotelBanheiro} alt="Banheiro" className="rounded-lg shadow-md w-full h-56 object-cover" />
-          <img src={hotelCorredor} alt="Corredor" className="rounded-lg shadow-md w-full h-56 object-cover" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 mb-12">
+          <img src={hotelQuarto} alt="Quarto decorado" className="rounded-lg shadow-md w-full h-44 object-cover" />
+          <img src={hotelQuartoPeixeboi} alt="Quarto Peixe-Boi" className="rounded-lg shadow-md w-full h-44 object-cover" />
+          <img src={hotelQuartoIndividual2} alt="Quarto Individual" className="rounded-lg shadow-md w-full h-44 object-cover" />
+          <img src={hotelBanheiro} alt="Banheiro" className="rounded-lg shadow-md w-full h-44 object-cover" />
         </div>
       </div>
     </section>
@@ -95,34 +109,37 @@ const Quartos = () => (
           {rooms.map((room) => (
             <div
               key={room.name}
-              className={`rounded-lg border p-6 transition-shadow hover:shadow-lg ${
+              className={`rounded-lg border overflow-hidden transition-shadow hover:shadow-lg ${
                 room.highlight ? "border-primary bg-primary/5" : "bg-card"
               }`}
             >
-              {room.highlight && (
-                <span className="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">
-                  ★ Destaque
-                </span>
-              )}
-              <h3 className="font-display text-lg font-semibold mb-1">{room.name}</h3>
-              <p className="text-sm text-muted-foreground mb-1">{room.beds}</p>
-              {room.size && <p className="text-sm text-accent font-medium mb-3">{room.size}</p>}
-              <ul className="space-y-1 mt-3">
-                {room.amenities.map((a) => (
-                  <li key={a} className="text-sm text-muted-foreground flex items-center gap-2">
-                    <span className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
-                    {a}
-                  </li>
-                ))}
-              </ul>
-              <a
-                href="https://wa.me/5594992854456"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-5 block text-center bg-primary text-primary-foreground py-2.5 rounded-md text-sm font-semibold hover:bg-primary/90 transition-colors"
-              >
-                Reservar
-              </a>
+              <img src={room.image} alt={room.name} className="w-full h-48 object-cover" />
+              <div className="p-6">
+                {room.highlight && (
+                  <span className="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">
+                    ★ Destaque
+                  </span>
+                )}
+                <h3 className="font-display text-lg font-semibold mb-1">{room.name}</h3>
+                <p className="text-sm text-muted-foreground mb-1">{room.beds}</p>
+                {room.size && <p className="text-sm text-accent font-medium mb-3">{room.size}</p>}
+                <ul className="space-y-1 mt-3">
+                  {room.amenities.map((a) => (
+                    <li key={a} className="text-sm text-muted-foreground flex items-center gap-2">
+                      <span className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
+                      {a}
+                    </li>
+                  ))}
+                </ul>
+                <a
+                  href="https://wa.me/5594992854456"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 block text-center bg-primary text-primary-foreground py-2.5 rounded-md text-sm font-semibold hover:bg-primary/90 transition-colors"
+                >
+                  Reservar
+                </a>
+              </div>
             </div>
           ))}
         </div>
