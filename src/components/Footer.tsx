@@ -9,7 +9,7 @@ import logoMastercard from "@/assets/logo-mastercard.png";
 
 const Footer = () => {
   return (
-    <footer className="bg-foreground text-primary-foreground/80">
+    <footer className="bg-foreground text-primary-foreground/80 text-base">
       <div className="container py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
           {/* Brand */}
@@ -17,14 +17,14 @@ const Footer = () => {
             <Link to="/" className="inline-block mb-3">
               <img src={logoGaivota} alt="Gaivota Hotel" className="h-16 w-auto" />
             </Link>
-            <p className="text-sm leading-relaxed mb-4">
+            <p className="text-base leading-relaxed mb-4">
               Conforto, natureza e hospitalidade no coração da Amazônia Paraense.
             </p>
             <a
               href="https://www.instagram.com/gaivotahotel_eldorado/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-accent hover:text-accent/80 transition-colors text-sm"
+              className="inline-flex items-center gap-2 text-accent hover:text-accent/80 transition-colors text-base"
             >
               <Instagram className="w-4 h-4" />
               @gaivotahotel_eldorado
@@ -34,7 +34,7 @@ const Footer = () => {
           {/* Links */}
           <div className="flex flex-col items-center">
             <h4 className="font-display text-lg font-semibold text-primary-foreground mb-4">Navegação</h4>
-            <nav className="flex flex-col items-center gap-2 text-sm">
+            <nav className="flex flex-col items-center gap-2 text-base">
               <Link to="/" className="hover:text-accent transition-colors">Home</Link>
               <Link to="/quartos" className="hover:text-accent transition-colors">Quartos</Link>
               <Link to="/estrutura" className="hover:text-accent transition-colors">Estrutura</Link>
@@ -46,7 +46,7 @@ const Footer = () => {
           {/* Contact */}
           <div className="flex flex-col items-center">
             <h4 className="font-display text-lg font-semibold text-primary-foreground mb-4">Contato</h4>
-            <div className="flex flex-col items-center gap-3 text-sm">
+            <div className="flex flex-col items-center gap-3 text-base">
               <a href="tel:+5594992854456" className="flex items-center gap-2 hover:text-accent transition-colors">
                 <Phone className="w-4 h-4 text-accent" />
                 (94) 99285-4456
@@ -67,7 +67,7 @@ const Footer = () => {
         <div className="mt-10 pt-8 border-t border-primary-foreground/10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3 flex-wrap justify-center">
-              <span className="text-xs uppercase tracking-wider mr-1 text-primary-foreground/50">Formas de pagamento:</span>
+              <span className="text-sm uppercase tracking-wider mr-1 text-primary-foreground/50">Formas de pagamento:</span>
               <div className="flex items-center gap-2 flex-wrap justify-center">
                 <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><VisaLogo className="h-5 w-auto" /></div>
                 <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><img src={logoMastercard} alt="Mastercard" className="h-5 w-auto" /></div>
@@ -78,12 +78,12 @@ const Footer = () => {
                 <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><BoletoLogo className="h-5 w-auto" /></div>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-xs">
+            <div className="flex items-center gap-2 text-sm">
               <BrazilFlag className="h-4 w-auto" />
               <span>© {new Date().getFullYear()} Gaivota Hotel. Todos os direitos reservados.</span>
             </div>
           </div>
-          <p className="text-center text-xs mt-4 text-primary-foreground/50">
+          <p className="text-center text-sm mt-4 text-primary-foreground/50">
             Faturamento para empresas disponível via boleto bancário.
           </p>
         </div>
