@@ -88,13 +88,14 @@ const Estrutura = () => (
 
     {/* Gallery */}
     <section className="py-12">
-      <div className="container grid grid-cols-2 md:grid-cols-3 gap-4">
-        <img src={hotelRecepcao} alt="Recepção" className="rounded-lg shadow-md w-full h-64 object-cover" />
-        <img src={hotelCafeArea} alt="Área do Café" className="rounded-lg shadow-md w-full h-64 object-cover" />
-        <img src={hotelHallAmazonia} alt="Hall com quadro amazônico" className="rounded-lg shadow-md w-full h-64 object-cover" />
-        <img src={hotelRestaurante2} alt="Restaurante" className="rounded-lg shadow-md w-full h-64 object-cover" />
-        <img src={hotelEscada} alt="Escadaria" className="rounded-lg shadow-md w-full h-64 object-cover" />
-        <img src={hotelLobby} alt="Hall" className="rounded-lg shadow-md w-full h-64 object-cover" />
+      <div className="container grid grid-cols-2 md:grid-cols-4 gap-3">
+        <img src={hotelFachada2} alt="Fachada do Hotel" className="rounded-lg shadow-md w-full h-56 object-cover col-span-2" />
+        <img src={hotelRecepcao} alt="Recepção" className="rounded-lg shadow-md w-full h-56 object-cover" />
+        <img src={hotelCafeArea} alt="Área do Café" className="rounded-lg shadow-md w-full h-56 object-cover" />
+        <img src={hotelHallAmazonia} alt="Hall com quadro amazônico" className="rounded-lg shadow-md w-full h-56 object-cover" />
+        <img src={hotelMataAtlantica} alt="Decoração Mata Atlântica" className="rounded-lg shadow-md w-full h-56 object-cover" />
+        <img src={hotelRestaurante2} alt="Restaurante" className="rounded-lg shadow-md w-full h-56 object-cover" />
+        <img src={hotelEscada} alt="Escadaria" className="rounded-lg shadow-md w-full h-56 object-cover" />
       </div>
     </section>
 
