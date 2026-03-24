@@ -67,7 +67,7 @@ const Footer = () => {
         <div className="mt-10 pt-8 border-t border-primary-foreground/10">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3 flex-wrap justify-center">
-              <span className="text-xs uppercase tracking-wider mr-1 text-primary-foreground/50">Formas de pagamento:</span>
+              <span className="text-sm uppercase tracking-wider mr-1 text-primary-foreground/50">Formas de pagamento:</span>
               <div className="flex items-center gap-2 flex-wrap justify-center">
                 <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><VisaLogo className="h-5 w-auto" /></div>
                 <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><img src={logoMastercard} alt="Mastercard" className="h-5 w-auto" /></div>
