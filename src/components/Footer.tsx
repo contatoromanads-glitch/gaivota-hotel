@@ -11,9 +11,9 @@ const Footer = () => {
   return (
     <footer className="bg-foreground text-primary-foreground/80">
       <div className="container py-12 md:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
           {/* Brand */}
-          <div>
+          <div className="flex flex-col items-center">
             <Link to="/" className="inline-block mb-3">
               <img src={logoGaivota} alt="Gaivota Hotel" className="h-16 w-auto" />
             </Link>
@@ -32,9 +32,9 @@ const Footer = () => {
           </div>
 
           {/* Links */}
-          <div>
+          <div className="flex flex-col items-center">
             <h4 className="font-display text-lg font-semibold text-primary-foreground mb-4">Navegação</h4>
-            <nav className="flex flex-col gap-2 text-sm">
+            <nav className="flex flex-col items-center gap-2 text-sm">
               <Link to="/" className="hover:text-accent transition-colors">Home</Link>
               <Link to="/quartos" className="hover:text-accent transition-colors">Quartos</Link>
               <Link to="/estrutura" className="hover:text-accent transition-colors">Estrutura</Link>
@@ -44,9 +44,9 @@ const Footer = () => {
           </div>
 
           {/* Contact */}
-          <div>
+          <div className="flex flex-col items-center">
             <h4 className="font-display text-lg font-semibold text-primary-foreground mb-4">Contato</h4>
-            <div className="flex flex-col gap-3 text-sm">
+            <div className="flex flex-col items-center gap-3 text-sm">
               <a href="tel:+5594992854456" className="flex items-center gap-2 hover:text-accent transition-colors">
                 <Phone className="w-4 h-4 text-accent" />
                 (94) 99285-4456
