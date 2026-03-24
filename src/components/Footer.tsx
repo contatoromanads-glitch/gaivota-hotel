@@ -83,7 +83,7 @@ const Footer = () => {
               <span>© {new Date().getFullYear()} Gaivota Hotel. Todos os direitos reservados.</span>
             </div>
           </div>
-          <p className="text-center text-xs mt-4 text-primary-foreground/50">
+          <p className="text-center text-sm mt-4 text-primary-foreground/50">
             Faturamento para empresas disponível via boleto bancário.
           </p>
         </div>
