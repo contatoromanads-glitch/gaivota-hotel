@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import { ReviewsCarousel } from "@/components/ReviewsSection";
 import {
   Building2, Car, Wifi, ConciergeBell, Coffee, Clock, Sun, WashingMachine,
   UtensilsCrossed, ShoppingCart, MapPin, TreePine, Landmark
@@ -71,7 +72,6 @@ const Estrutura = () => (
       </div>
     </section>
 
-    {/* Amenities */}
     <section className="py-16 bg-warm">
       <div className="container">
         <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">Comodidades do Hotel</h2>
@@ -86,7 +86,6 @@ const Estrutura = () => (
       </div>
     </section>
 
-    {/* Gallery */}
     <section className="py-12">
       <div className="container grid grid-cols-2 md:grid-cols-4 gap-3">
         <img src={hotelFachada2} alt="Fachada do Hotel" className="rounded-lg shadow-md w-full h-56 object-cover col-span-2" />
@@ -99,7 +98,6 @@ const Estrutura = () => (
       </div>
     </section>
 
-    {/* Nearby */}
     <section className="py-16 bg-warm">
       <div className="container">
         <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">Proximidades e Pontos de Interesse</h2>
@@ -124,7 +122,6 @@ const Estrutura = () => (
       </div>
     </section>
 
-    {/* Services highlight */}
     <section className="py-16 bg-secondary text-secondary-foreground">
       <div className="container text-center">
         <h2 className="font-display text-2xl md:text-3xl font-bold mb-4">Serviços Anexos ao Hotel</h2>
@@ -137,6 +134,8 @@ const Estrutura = () => (
         </p>
       </div>
     </section>
+
+    <ReviewsCarousel />
   </Layout>
 );
 

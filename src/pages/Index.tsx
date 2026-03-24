@@ -1,13 +1,13 @@
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Leaf, MapPin, Heart, Coffee, ArrowRight } from "lucide-react";
+import { ReviewsFull } from "@/components/ReviewsSection";
+import { WHATSAPP_URL } from "@/lib/constants";
 import hotelFachada from "@/assets/hotel-fachada2.jpeg";
 import hotelLobby from "@/assets/hotel-lobby.jpeg";
-import hotelCafeManha from "@/assets/hotel-cafe-manha.jpeg";
 import hotelCafeManha2 from "@/assets/hotel-cafe-manha2.jpeg";
 import hotelQuarto from "@/assets/hotel-quarto.jpeg";
 import hotelCafeArea from "@/assets/hotel-cafe-area.jpeg";
-import hotelRestaurante from "@/assets/hotel-restaurante.jpeg";
 import hotelMataAtlantica from "@/assets/hotel-mata-atlantica.jpeg";
 
 const highlights = [
@@ -33,7 +33,7 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
             <a
-              href="https://wa.me/5594992854456"
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-primary text-primary-foreground px-8 py-3 rounded-md font-semibold text-lg hover:bg-primary/90 transition-colors"
@@ -134,6 +134,9 @@ const Index = () => {
         </div>
       </section>
 
+      {/* Reviews — Full Section */}
+      <ReviewsFull />
+
       {/* CTA */}
       <section className="py-20 bg-secondary text-secondary-foreground text-center">
         <div className="container">
@@ -144,7 +147,7 @@ const Index = () => {
             Entre em contato pelo WhatsApp e garanta sua hospedagem no Gaivota Hotel.
           </p>
           <a
-            href="https://wa.me/5594992854456"
+            href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-block bg-primary-foreground text-secondary px-8 py-4 rounded-md font-bold text-lg hover:bg-primary-foreground/90 transition-colors"

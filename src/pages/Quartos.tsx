@@ -1,4 +1,6 @@
 import Layout from "@/components/Layout";
+import { ReviewsCarousel } from "@/components/ReviewsSection";
+import { WHATSAPP_URL } from "@/lib/constants";
 import hotelCorredor from "@/assets/hotel-corredor.jpeg";
 import hotelBanheiro from "@/assets/hotel-banheiro.jpeg";
 import hotelBanheiro2 from "@/assets/hotel-banheiro2.jpeg";
@@ -137,7 +139,7 @@ const Quartos = () => (
                   ))}
                 </ul>
                 <a
-                  href="https://wa.me/5594992854456"
+                  href={WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-5 block text-center bg-primary text-primary-foreground py-2.5 rounded-md text-sm font-semibold hover:bg-primary/90 transition-colors"
@@ -170,6 +172,9 @@ const Quartos = () => (
         </div>
       </div>
     </section>
+
+    {/* Reviews Carousel */}
+    <ReviewsCarousel />
   </Layout>
 );
 

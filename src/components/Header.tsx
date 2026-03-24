@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { WHATSAPP_URL } from "@/lib/constants";
 import { Menu, X, Phone } from "lucide-react";
 
 const navItems = [

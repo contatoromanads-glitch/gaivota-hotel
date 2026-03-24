@@ -1,6 +1,8 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
 import { Phone, Mail, MapPin, Instagram, Send } from "lucide-react";
+import { ReviewsCarousel } from "@/components/ReviewsSection";
+import { WHATSAPP_URL } from "@/lib/constants";
 
 const Contatos = () => {
   const [form, setForm] = useState({ nome: "", email: "", telefone: "", mensagem: "" });
@@ -8,7 +10,7 @@ const Contatos = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const msg = encodeURIComponent(
-      `Olá! Sou ${form.nome}.\nEmail: ${form.email}\nTelefone: ${form.telefone}\n\n${form.mensagem}`
+      `Vim do site, gostaria de fazer uma reserva direta!\n\nSou ${form.nome}.\nEmail: ${form.email}\nTelefone: ${form.telefone}\n\n${form.mensagem}`
     );
     window.open(`https://wa.me/5594992854456?text=${msg}`, "_blank");
   };
@@ -27,7 +29,6 @@ const Contatos = () => {
       <section className="py-16">
         <div className="container">
           <div className="grid md:grid-cols-2 gap-12">
-            {/* Contact Info */}
             <div>
               <h2 className="font-display text-2xl font-bold mb-6">Informações de Contato</h2>
               <div className="space-y-5">
@@ -76,7 +77,6 @@ const Contatos = () => {
               </div>
             </div>
 
-            {/* Form */}
             <div>
               <h2 className="font-display text-2xl font-bold mb-6">Envie uma Mensagem</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -123,6 +123,9 @@ const Contatos = () => {
           </div>
         </div>
       </section>
+
+      {/* Reviews Carousel */}
+      <ReviewsCarousel />
 
       {/* Map */}
       <section className="h-[400px]">
