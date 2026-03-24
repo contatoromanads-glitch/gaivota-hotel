@@ -36,7 +36,7 @@ const Header = () => {
             </Link>
           ))}
           <a
-            href="https://wa.me/5594992854456"
+            href={WHATSAPP_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-semibold hover:bg-primary/90 transition-colors"
