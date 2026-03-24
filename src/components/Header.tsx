@@ -19,8 +19,8 @@ const Header = () => {
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-foreground/95 backdrop-blur-sm">
       <div className="container flex items-center justify-between h-16 md:h-20">
-        <Link to="/" className="font-display text-xl md:text-2xl font-bold text-primary-foreground tracking-wide">
-          Gaivota <span className="text-accent">Hotel</span>
+        <Link to="/" className="flex items-center gap-2">
+          <img src={logoGaivota} alt="Gaivota Hotel" className="h-10 md:h-12 w-auto" />
         </Link>
 
         {/* Desktop nav */}
