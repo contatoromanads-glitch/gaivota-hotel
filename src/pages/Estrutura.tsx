@@ -86,9 +86,11 @@ const Estrutura = () => (
 
     {/* Gallery */}
     <section className="py-12">
-      <div className="container grid md:grid-cols-2 gap-4">
+      <div className="container grid grid-cols-2 md:grid-cols-3 gap-4">
         <img src={hotelRecepcao} alt="Recepção" className="rounded-lg shadow-md w-full h-64 object-cover" />
         <img src={hotelCafeArea} alt="Área do Café" className="rounded-lg shadow-md w-full h-64 object-cover" />
+        <img src={hotelHallAmazonia} alt="Hall com quadro amazônico" className="rounded-lg shadow-md w-full h-64 object-cover" />
+        <img src={hotelRestaurante2} alt="Restaurante" className="rounded-lg shadow-md w-full h-64 object-cover" />
         <img src={hotelEscada} alt="Escadaria" className="rounded-lg shadow-md w-full h-64 object-cover" />
         <img src={hotelLobby} alt="Hall" className="rounded-lg shadow-md w-full h-64 object-cover" />
       </div>
