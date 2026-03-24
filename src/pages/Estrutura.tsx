@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Layout from "@/components/Layout";
 import { ReviewsCarousel } from "@/components/ReviewsSection";
+import { ScrollReveal } from "@/hooks/useScrollReveal";
 import ImageLightbox from "@/components/ImageLightbox";
 import {
   Building2, Car, Wifi, ConciergeBell, Coffee, Clock, Sun, WashingMachine,
@@ -54,20 +55,24 @@ const Estrutura = () => {
         <img src={hotelLobby} alt="Lobby" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-foreground/70" />
         <div className="relative z-10 text-center px-4">
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-white text-shadow-hero mb-3">Sua Experiência Completa</h1>
-          <p className="text-white/85 text-lg">Estrutura completa com inspiração amazônica</p>
+          <h1 className="font-display text-4xl md:text-5xl font-bold text-white text-shadow-hero mb-3 animate-fade-in-up">Sua Experiência Completa</h1>
+          <p className="text-white/85 text-lg animate-fade-in-up" style={{ animationDelay: "0.2s" }}>Estrutura completa com inspiração amazônica</p>
         </div>
       </section>
 
       <section className="py-16 bg-warm">
         <div className="container">
-          <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">Comodidades do Hotel</h2>
+          <ScrollReveal>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">Comodidades do Hotel</h2>
+          </ScrollReveal>
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {amenities.map((a) => (
-              <div key={a.label} className="flex items-center gap-3 bg-card rounded-lg p-4 shadow-sm">
-                <a.icon className="w-5 h-5 text-secondary shrink-0" />
-                <span className="text-sm font-medium">{a.label}</span>
-              </div>
+            {amenities.map((a, i) => (
+              <ScrollReveal key={a.label} delay={i * 0.05}>
+                <div className="flex items-center gap-3 bg-card rounded-lg p-4 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300">
+                  <a.icon className="w-5 h-5 text-secondary shrink-0" />
+                  <span className="text-sm font-medium">{a.label}</span>
+                </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -76,36 +81,41 @@ const Estrutura = () => {
       <section className="py-12">
         <div className="container grid grid-cols-2 md:grid-cols-4 gap-3">
           {galleryImages.map((img, i) => (
-            <img
-              key={img.alt}
-              src={img.src}
-              alt={img.alt}
-              className={`rounded-lg shadow-md w-full h-56 object-cover cursor-pointer hover:opacity-90 transition-opacity ${i === 0 ? "col-span-2" : ""}`}
-              onClick={() => setLightboxIndex(i)}
-            />
+            <ScrollReveal key={img.alt} delay={i * 0.06} direction="scale">
+              <img
+                src={img.src}
+                alt={img.alt}
+                className={`rounded-lg shadow-md w-full h-56 object-cover cursor-pointer img-hover ${i === 0 ? "col-span-2" : ""}`}
+                onClick={() => setLightboxIndex(i)}
+              />
+            </ScrollReveal>
           ))}
         </div>
       </section>
 
       <section className="py-16 bg-warm">
         <div className="container">
-          <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">Proximidades e Pontos de Interesse</h2>
+          <ScrollReveal>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">Proximidades e Pontos de Interesse</h2>
+          </ScrollReveal>
           <div className="grid md:grid-cols-3 gap-8">
-            {nearby.map((cat) => (
-              <div key={cat.category} className="bg-card rounded-lg p-6 shadow-sm">
-                <div className="flex items-center gap-3 mb-4">
-                  <cat.icon className="w-6 h-6 text-primary" />
-                  <h3 className="font-display text-lg font-semibold">{cat.category}</h3>
+            {nearby.map((cat, i) => (
+              <ScrollReveal key={cat.category} delay={i * 0.1} direction="up">
+                <div className="bg-card rounded-lg p-6 shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 h-full">
+                  <div className="flex items-center gap-3 mb-4">
+                    <cat.icon className="w-6 h-6 text-primary" />
+                    <h3 className="font-display text-lg font-semibold">{cat.category}</h3>
+                  </div>
+                  <ul className="space-y-2">
+                    {cat.items.map((item) => (
+                      <li key={item} className="text-sm text-muted-foreground flex items-start gap-2">
+                        <MapPin className="w-3.5 h-3.5 text-accent mt-0.5 shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <ul className="space-y-2">
-                  {cat.items.map((item) => (
-                    <li key={item} className="text-sm text-muted-foreground flex items-start gap-2">
-                      <MapPin className="w-3.5 h-3.5 text-accent mt-0.5 shrink-0" />
-                      {item}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+              </ScrollReveal>
             ))}
           </div>
         </div>
@@ -113,11 +123,13 @@ const Estrutura = () => {
 
       <section className="py-16 bg-secondary text-secondary-foreground">
         <div className="container text-center">
-          <h2 className="font-display text-2xl md:text-3xl font-bold mb-4">Serviços Anexos ao Hotel</h2>
-          <p className="max-w-2xl mx-auto text-secondary-foreground/80 mb-6">
-            O Gaivota Hotel conta com o <strong>Supermercado Gaivota</strong> e a <strong>Lanchonete Gaivota</strong> anexos ao hotel, além de um <strong>Correspondente Bradesco Express</strong> para sua conveniência bancária.
-          </p>
-          <p className="text-secondary-foreground/70 text-sm">Tudo o que você precisa, sem sair do hotel.</p>
+          <ScrollReveal direction="scale">
+            <h2 className="font-display text-2xl md:text-3xl font-bold mb-4">Serviços Anexos ao Hotel</h2>
+            <p className="max-w-2xl mx-auto text-secondary-foreground/80 mb-6">
+              O Gaivota Hotel conta com o <strong>Supermercado Gaivota</strong> e a <strong>Lanchonete Gaivota</strong> anexos ao hotel, além de um <strong>Correspondente Bradesco Express</strong> para sua conveniência bancária.
+            </p>
+            <p className="text-secondary-foreground/70 text-sm">Tudo o que você precisa, sem sair do hotel.</p>
+          </ScrollReveal>
         </div>
       </section>
 

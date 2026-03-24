@@ -111,8 +111,10 @@ export const ReviewsFull = () => (
         </p>
       </div>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {reviews.map((r) => (
-          <ReviewCard key={r.name} review={r} />
+        {reviews.map((r, i) => (
+          <div key={r.name} className="opacity-0 animate-fade-in-up" style={{ animationDelay: `${i * 0.08}s` }}>
+            <ReviewCard review={r} />
+          </div>
         ))}
       </div>
     </div>
