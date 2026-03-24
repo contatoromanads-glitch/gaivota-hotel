@@ -9,6 +9,8 @@ import hotelLobby from "@/assets/hotel-lobby.jpeg";
 import hotelEscada from "@/assets/hotel-escada.jpeg";
 import hotelHallAmazonia from "@/assets/hotel-hall-amazonia.jpeg";
 import hotelRestaurante2 from "@/assets/hotel-restaurante2.jpeg";
+import hotelMataAtlantica from "@/assets/hotel-mata-atlantica.jpeg";
+import hotelFachada2 from "@/assets/hotel-fachada2.jpeg";
 
 const amenities = [
   { icon: Building2, label: "46 Apartamentos" },
