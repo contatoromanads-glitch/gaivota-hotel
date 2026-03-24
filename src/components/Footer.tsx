@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Instagram } from "lucide-react";
-import {
-  VisaLogo, MastercardLogo, EloLogo, PixLogo,
-  HipercardLogo, AmexLogo, BoletoLogo, BrazilFlag,
-} from "./PaymentLogos";
+import { VisaLogo, AmexLogo, BoletoLogo, BrazilFlag } from "./PaymentLogos";
 import logoGaivota from "@/assets/logo-gaivota.png";
+import logoElo from "@/assets/logo-elo.png";
+import logoPix from "@/assets/logo-pix.png";
+import logoHipercard from "@/assets/logo-hipercard.png";
+import logoMastercard from "@/assets/logo-mastercard.png";
 
 const Footer = () => {
   return (
