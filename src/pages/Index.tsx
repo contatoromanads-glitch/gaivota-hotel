@@ -95,8 +95,8 @@ const Index = () => {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <img src={hotelLobby} alt="Lobby do Hotel" className="rounded-lg shadow-lg w-full h-48 object-cover" />
-              <img src={hotelRestaurante} alt="Restaurante" className="rounded-lg shadow-lg w-full h-48 object-cover mt-8" />
-              <img src={hotelCafeManha} alt="Café da Manhã" className="rounded-lg shadow-lg w-full h-48 object-cover" />
+              <img src={hotelMataAtlantica} alt="Decoração Mata Atlântica" className="rounded-lg shadow-lg w-full h-48 object-cover mt-8" />
+              <img src={hotelCafeManha2} alt="Café da Manhã Regional" className="rounded-lg shadow-lg w-full h-48 object-cover" />
               <img src={hotelCafeArea} alt="Área do Café" className="rounded-lg shadow-lg w-full h-48 object-cover mt-8" />
             </div>
           </div>
