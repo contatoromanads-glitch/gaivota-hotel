@@ -1,12 +1,14 @@
 import { Link } from "react-router-dom";
 import Layout from "@/components/Layout";
 import { Leaf, MapPin, Heart, Coffee, ArrowRight } from "lucide-react";
-import hotelFachada from "@/assets/hotel-fachada.jpeg";
+import hotelFachada from "@/assets/hotel-fachada2.jpeg";
 import hotelLobby from "@/assets/hotel-lobby.jpeg";
 import hotelCafeManha from "@/assets/hotel-cafe-manha.jpeg";
+import hotelCafeManha2 from "@/assets/hotel-cafe-manha2.jpeg";
 import hotelQuarto from "@/assets/hotel-quarto.jpeg";
 import hotelCafeArea from "@/assets/hotel-cafe-area.jpeg";
 import hotelRestaurante from "@/assets/hotel-restaurante.jpeg";
+import hotelMataAtlantica from "@/assets/hotel-mata-atlantica.jpeg";
 
 const highlights = [
   { icon: Leaf, title: "Experiência Amazônica", desc: "Decoração e ambiente inspirados na riqueza da fauna e flora local." },
