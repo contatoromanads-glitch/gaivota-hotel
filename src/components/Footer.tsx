@@ -34,7 +34,7 @@ const Footer = () => {
           {/* Links */}
           <div className="flex flex-col items-center">
             <h4 className="font-display text-lg font-semibold text-primary-foreground mb-4">Navegação</h4>
-            <nav className="flex flex-col items-center gap-2 text-sm">
+            <nav className="flex flex-col items-center gap-2 text-base">
               <Link to="/" className="hover:text-accent transition-colors">Home</Link>
               <Link to="/quartos" className="hover:text-accent transition-colors">Quartos</Link>
               <Link to="/estrutura" className="hover:text-accent transition-colors">Estrutura</Link>
