@@ -69,7 +69,7 @@ const Header = () => {
           ))}
           <div className="px-6 pt-2">
             <a
-              href="https://wa.me/5594992854456"
+              href={WHATSAPP_URL}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-3 rounded-md text-sm font-semibold"
