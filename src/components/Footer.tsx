@@ -4,6 +4,7 @@ import {
   VisaLogo, MastercardLogo, EloLogo, PixLogo,
   HipercardLogo, AmexLogo, BoletoLogo, BrazilFlag,
 } from "./PaymentLogos";
+import logoGaivota from "@/assets/logo-gaivota.png";
 
 const Footer = () => {
   return (
@@ -12,9 +13,9 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
           {/* Brand */}
           <div>
-            <h3 className="font-display text-2xl font-bold text-primary-foreground mb-3">
-              Gaivota <span className="text-accent">Hotel</span>
-            </h3>
+            <Link to="/" className="inline-block mb-3">
+              <img src={logoGaivota} alt="Gaivota Hotel" className="h-16 w-auto" />
+            </Link>
             <p className="text-sm leading-relaxed mb-4">
               Conforto, natureza e hospitalidade no coração da Amazônia Paraense.
             </p>
