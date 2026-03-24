@@ -4,6 +4,7 @@ import { Leaf, MapPin, Heart, Coffee, ArrowRight } from "lucide-react";
 import { ReviewsFull } from "@/components/ReviewsSection";
 import { GalleryProvider, ClickableImage } from "@/components/GalleryProvider";
 import { WHATSAPP_URL } from "@/lib/constants";
+import { ScrollReveal } from "@/hooks/useScrollReveal";
 import hotelFachada from "@/assets/hotel-fachada2.jpeg";
 import hotelLobby from "@/assets/hotel-lobby.jpeg";
 import hotelCafeManha2 from "@/assets/hotel-cafe-manha2.jpeg";
@@ -45,10 +46,10 @@ const Index = () => {
                   Conforto, natureza e hospitalidade no coração da Amazônia Paraense.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center animate-fade-in-up" style={{ animationDelay: "0.4s" }}>
-                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="bg-primary text-primary-foreground px-8 py-3 rounded-md font-semibold text-lg hover:bg-primary/90 transition-colors">
+                  <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="cta-pulse bg-primary text-primary-foreground px-8 py-3 rounded-md font-semibold text-lg">
                     Faça sua Reserva
                   </a>
-                  <Link to="/quartos" className="border-2 border-white text-white px-8 py-3 rounded-md font-semibold text-lg hover:bg-white/10 transition-colors">
+                  <Link to="/quartos" className="cta-pulse border-2 border-white text-white px-8 py-3 rounded-md font-semibold text-lg hover:bg-white/10">
                     Ver Quartos
                   </Link>
                 </div>
@@ -59,14 +60,16 @@ const Index = () => {
             <section className="py-16 md:py-24 bg-warm">
               <div className="container">
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-                  {highlights.map((item) => (
-                    <div key={item.title} className="text-center group">
-                      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary/10 mb-4 group-hover:bg-secondary/20 transition-colors">
-                        <item.icon className="w-7 h-7 text-secondary" />
+                  {highlights.map((item, i) => (
+                    <ScrollReveal key={item.title} delay={i * 0.1} direction="up">
+                      <div className="text-center group">
+                        <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-secondary/10 mb-4 group-hover:bg-secondary/20 group-hover:scale-110 transition-all duration-300">
+                          <item.icon className="w-7 h-7 text-secondary" />
+                        </div>
+                        <h3 className="font-display text-lg font-semibold mb-2">{item.title}</h3>
+                        <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
                       </div>
-                      <h3 className="font-display text-lg font-semibold mb-2">{item.title}</h3>
-                      <p className="text-muted-foreground text-sm leading-relaxed">{item.desc}</p>
-                    </div>
+                    </ScrollReveal>
                   ))}
                 </div>
               </div>
@@ -76,7 +79,7 @@ const Index = () => {
             <section className="py-16 md:py-24">
               <div className="container">
                 <div className="grid md:grid-cols-2 gap-12 items-center">
-                  <div>
+                  <ScrollReveal direction="left">
                     <span className="text-accent font-semibold text-sm uppercase tracking-widest">Sobre o Hotel</span>
                     <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-6">Um Oásis de Tranquilidade no Coração do Pará</h2>
                     <p className="text-muted-foreground leading-relaxed mb-4">
@@ -88,13 +91,15 @@ const Index = () => {
                     <Link to="/estrutura" className="inline-flex items-center gap-2 text-primary font-semibold hover:gap-3 transition-all">
                       Conheça nossa estrutura <ArrowRight className="w-4 h-4" />
                     </Link>
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <ClickableImage src={hotelLobby} alt="Lobby do Hotel" className="rounded-lg shadow-lg w-full h-48 object-cover" allImages={allImages} index={1} onClick={openLightbox} />
-                    <ClickableImage src={hotelMataAtlantica} alt="Decoração Mata Atlântica" className="rounded-lg shadow-lg w-full h-48 object-cover mt-8" allImages={allImages} index={2} onClick={openLightbox} />
-                    <ClickableImage src={hotelCafeManha2} alt="Café da Manhã Regional" className="rounded-lg shadow-lg w-full h-48 object-cover" allImages={allImages} index={3} onClick={openLightbox} />
-                    <ClickableImage src={hotelCafeArea} alt="Área do Café" className="rounded-lg shadow-lg w-full h-48 object-cover mt-8" allImages={allImages} index={4} onClick={openLightbox} />
-                  </div>
+                  </ScrollReveal>
+                  <ScrollReveal direction="right">
+                    <div className="grid grid-cols-2 gap-4">
+                      <ClickableImage src={hotelLobby} alt="Lobby do Hotel" className="rounded-lg shadow-lg w-full h-48 object-cover img-hover" allImages={allImages} index={1} onClick={openLightbox} />
+                      <ClickableImage src={hotelMataAtlantica} alt="Decoração Mata Atlântica" className="rounded-lg shadow-lg w-full h-48 object-cover mt-8 img-hover" allImages={allImages} index={2} onClick={openLightbox} />
+                      <ClickableImage src={hotelCafeManha2} alt="Café da Manhã Regional" className="rounded-lg shadow-lg w-full h-48 object-cover img-hover" allImages={allImages} index={3} onClick={openLightbox} />
+                      <ClickableImage src={hotelCafeArea} alt="Área do Café" className="rounded-lg shadow-lg w-full h-48 object-cover mt-8 img-hover" allImages={allImages} index={4} onClick={openLightbox} />
+                    </div>
+                  </ScrollReveal>
                 </div>
               </div>
             </section>
@@ -102,24 +107,28 @@ const Index = () => {
             {/* Rooms Preview */}
             <section className="py-16 md:py-24 bg-warm">
               <div className="container text-center">
-                <span className="text-accent font-semibold text-sm uppercase tracking-widest">Acomodações</span>
-                <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">Quartos com Temática Amazônica</h2>
-                <p className="text-muted-foreground max-w-2xl mx-auto mb-10">Cada quarto é um convite ao relaxamento, com decoração inspirada na fauna e flora da Amazônia.</p>
-                <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
-                  <ClickableImage src={hotelQuarto} alt="Quarto do Hotel" className="rounded-lg shadow-lg w-full h-64 object-cover" allImages={allImages} index={5} onClick={openLightbox} />
-                  <div className="flex flex-col justify-center text-left bg-card rounded-lg p-8 shadow-lg">
-                    <h3 className="font-display text-xl font-semibold mb-3">Conforto em Cada Detalhe</h3>
-                    <ul className="space-y-2 text-muted-foreground text-sm">
-                      <li>✓ Ar-condicionado e aquecimento solar</li>
-                      <li>✓ TV de tela plana e Wi-Fi gratuito</li>
-                      <li>✓ Frigobar e banheiro privativo</li>
-                      <li>✓ Café da manhã regional incluso</li>
-                    </ul>
-                    <Link to="/quartos" className="mt-6 bg-primary text-primary-foreground px-6 py-3 rounded-md font-semibold text-center hover:bg-primary/90 transition-colors">
-                      Ver Todos os Quartos
-                    </Link>
+                <ScrollReveal>
+                  <span className="text-accent font-semibold text-sm uppercase tracking-widest">Acomodações</span>
+                  <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">Quartos com Temática Amazônica</h2>
+                  <p className="text-muted-foreground max-w-2xl mx-auto mb-10">Cada quarto é um convite ao relaxamento, com decoração inspirada na fauna e flora da Amazônia.</p>
+                </ScrollReveal>
+                <ScrollReveal delay={0.15}>
+                  <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                    <ClickableImage src={hotelQuarto} alt="Quarto do Hotel" className="rounded-lg shadow-lg w-full h-64 object-cover img-hover" allImages={allImages} index={5} onClick={openLightbox} />
+                    <div className="flex flex-col justify-center text-left bg-card rounded-lg p-8 shadow-lg">
+                      <h3 className="font-display text-xl font-semibold mb-3">Conforto em Cada Detalhe</h3>
+                      <ul className="space-y-2 text-muted-foreground text-sm">
+                        <li>✓ Ar-condicionado e aquecimento solar</li>
+                        <li>✓ TV de tela plana e Wi-Fi gratuito</li>
+                        <li>✓ Frigobar e banheiro privativo</li>
+                        <li>✓ Café da manhã regional incluso</li>
+                      </ul>
+                      <Link to="/quartos" className="cta-pulse mt-6 bg-primary text-primary-foreground px-6 py-3 rounded-md font-semibold text-center">
+                        Ver Todos os Quartos
+                      </Link>
+                    </div>
                   </div>
-                </div>
+                </ScrollReveal>
               </div>
             </section>
           </>
@@ -132,11 +141,13 @@ const Index = () => {
       {/* CTA */}
       <section className="py-20 bg-secondary text-secondary-foreground text-center">
         <div className="container">
-          <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">Reserve Agora e Viva a Amazônia</h2>
-          <p className="text-secondary-foreground/80 mb-8 max-w-xl mx-auto">Entre em contato pelo WhatsApp e garanta sua hospedagem no Gaivota Hotel.</p>
-          <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="inline-block bg-primary-foreground text-secondary px-8 py-4 rounded-md font-bold text-lg hover:bg-primary-foreground/90 transition-colors">
-            (94) 99285-4456 — WhatsApp
-          </a>
+          <ScrollReveal direction="scale">
+            <h2 className="font-display text-3xl md:text-4xl font-bold mb-4">Reserve Agora e Viva a Amazônia</h2>
+            <p className="text-secondary-foreground/80 mb-8 max-w-xl mx-auto">Entre em contato pelo WhatsApp e garanta sua hospedagem no Gaivota Hotel.</p>
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="cta-pulse inline-block bg-primary-foreground text-secondary px-8 py-4 rounded-md font-bold text-lg">
+              (94) 99285-4456 — WhatsApp
+            </a>
+          </ScrollReveal>
         </div>
       </section>
     </Layout>

@@ -3,6 +3,7 @@ import Layout from "@/components/Layout";
 import { Phone, Mail, MapPin, Instagram, Send } from "lucide-react";
 import { ReviewsCarousel } from "@/components/ReviewsSection";
 import { WHATSAPP_URL } from "@/lib/constants";
+import { ScrollReveal } from "@/hooks/useScrollReveal";
 
 const Contatos = () => {
   const [form, setForm] = useState({ nome: "", email: "", telefone: "", mensagem: "" });
@@ -19,21 +20,21 @@ const Contatos = () => {
     <Layout>
       <section className="relative h-[40vh] min-h-[250px] flex items-center justify-center bg-foreground">
         <div className="relative z-10 text-center px-4">
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-white text-shadow-hero mb-3">
+          <h1 className="font-display text-4xl md:text-5xl font-bold text-white text-shadow-hero mb-3 animate-fade-in-up">
             Fale Conosco
           </h1>
-          <p className="text-white/85 text-lg">Estamos prontos para atendê-lo</p>
+          <p className="text-white/85 text-lg animate-fade-in-up" style={{ animationDelay: "0.2s" }}>Estamos prontos para atendê-lo</p>
         </div>
       </section>
 
       <section className="py-16">
         <div className="container">
           <div className="grid md:grid-cols-2 gap-12">
-            <div>
+            <ScrollReveal direction="left">
               <h2 className="font-display text-2xl font-bold mb-6">Informações de Contato</h2>
               <div className="space-y-5">
                 <a href="tel:+5594992854456" className="flex items-center gap-4 group">
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
                     <Phone className="w-5 h-5 text-primary" />
                   </div>
                   <div>
@@ -42,7 +43,7 @@ const Contatos = () => {
                   </div>
                 </a>
                 <a href="mailto:gaivotahotelpara@gmail.com" className="flex items-center gap-4 group">
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
                     <Mail className="w-5 h-5 text-primary" />
                   </div>
                   <div>
@@ -66,7 +67,7 @@ const Contatos = () => {
                   rel="noopener noreferrer"
                   className="flex items-center gap-4 group"
                 >
-                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
+                  <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
                     <Instagram className="w-5 h-5 text-primary" />
                   </div>
                   <div>
@@ -75,9 +76,9 @@ const Contatos = () => {
                   </div>
                 </a>
               </div>
-            </div>
+            </ScrollReveal>
 
-            <div>
+            <ScrollReveal direction="right">
               <h2 className="font-display text-2xl font-bold mb-6">Envie uma Mensagem</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <input
@@ -86,7 +87,7 @@ const Contatos = () => {
                   required
                   value={form.nome}
                   onChange={(e) => setForm({ ...form, nome: e.target.value })}
-                  className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
                 />
                 <input
                   type="email"
@@ -94,14 +95,14 @@ const Contatos = () => {
                   required
                   value={form.email}
                   onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
                 />
                 <input
                   type="tel"
                   placeholder="Seu telefone"
                   value={form.telefone}
                   onChange={(e) => setForm({ ...form, telefone: e.target.value })}
-                  className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50"
+                  className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
                 />
                 <textarea
                   placeholder="Sua mensagem"
@@ -109,22 +110,21 @@ const Contatos = () => {
                   required
                   value={form.mensagem}
                   onChange={(e) => setForm({ ...form, mensagem: e.target.value })}
-                  className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none"
+                  className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none transition-shadow"
                 />
                 <button
                   type="submit"
-                  className="flex items-center justify-center gap-2 w-full bg-primary text-primary-foreground py-3 rounded-md font-semibold hover:bg-primary/90 transition-colors"
+                  className="cta-pulse flex items-center justify-center gap-2 w-full bg-primary text-primary-foreground py-3 rounded-md font-semibold"
                 >
                   <Send className="w-4 h-4" />
                   Enviar via WhatsApp
                 </button>
               </form>
-            </div>
+            </ScrollReveal>
           </div>
         </div>
       </section>
 
-      {/* Reviews Carousel */}
       <ReviewsCarousel />
 
       {/* Map */}
