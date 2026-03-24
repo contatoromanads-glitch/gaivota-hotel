@@ -24,7 +24,7 @@ const Footer = () => {
               href="https://www.instagram.com/gaivotahotel_eldorado/"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-accent hover:text-accent/80 transition-colors text-sm"
+              className="inline-flex items-center gap-2 text-accent hover:text-accent/80 transition-colors text-base"
             >
               <Instagram className="w-4 h-4" />
               @gaivotahotel_eldorado
