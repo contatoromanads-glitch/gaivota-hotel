@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
 import { Phone, Mail, MapPin, Instagram } from "lucide-react";
-import {
-  VisaLogo, MastercardLogo, EloLogo, PixLogo,
-  HipercardLogo, AmexLogo, BoletoLogo, BrazilFlag,
-} from "./PaymentLogos";
+import { VisaLogo, AmexLogo, BoletoLogo, BrazilFlag } from "./PaymentLogos";
 import logoGaivota from "@/assets/logo-gaivota.png";
+import logoElo from "@/assets/logo-elo.png";
+import logoPix from "@/assets/logo-pix.png";
+import logoHipercard from "@/assets/logo-hipercard.png";
+import logoMastercard from "@/assets/logo-mastercard.png";
 
 const Footer = () => {
   return (
@@ -69,10 +70,10 @@ const Footer = () => {
               <span className="text-xs uppercase tracking-wider mr-1 text-primary-foreground/50">Formas de pagamento:</span>
               <div className="flex items-center gap-2 flex-wrap justify-center">
                 <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><VisaLogo className="h-5 w-auto" /></div>
-                <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><MastercardLogo className="h-5 w-auto" /></div>
-                <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><EloLogo className="h-5 w-auto" /></div>
-                <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><PixLogo className="h-5 w-auto" /></div>
-                <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><HipercardLogo className="h-5 w-auto" /></div>
+                <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><img src={logoMastercard} alt="Mastercard" className="h-5 w-auto" /></div>
+                <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><img src={logoElo} alt="Elo" className="h-5 w-auto" /></div>
+                <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><img src={logoPix} alt="Pix" className="h-5 w-auto" /></div>
+                <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><img src={logoHipercard} alt="Hipercard" className="h-5 w-auto" /></div>
                 <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><AmexLogo className="h-5 w-auto" /></div>
                 <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><BoletoLogo className="h-5 w-auto" /></div>
               </div>
