@@ -51,6 +51,20 @@ const reviews = [
     text: "Ótimas acomodações, enxoval de cama muito limpo e higienizado e um preço que vale a pena pagar com o complemento do café da manhã que é de bom para mais.",
     time: "Google",
   },
+  {
+    name: "Victor Hugo Gomes Valente",
+    source: "Google",
+    rating: 4,
+    text: "Pelo preço foi um excelente custo benefício.",
+    time: "Google",
+  },
+  {
+    name: "Luciana Martins",
+    source: "Google",
+    rating: 5,
+    text: "Ótimo hotel para interior, é limpo, bem localizado e seguro.",
+    time: "Google",
+  },
 ];
 
 const StarRating = ({ rating }: { rating: number }) => (
