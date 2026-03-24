@@ -78,7 +78,7 @@ const Footer = () => {
                 <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><BoletoLogo className="h-5 w-auto" /></div>
               </div>
             </div>
-            <div className="flex items-center gap-2 text-xs">
+            <div className="flex items-center gap-2 text-sm">
               <BrazilFlag className="h-4 w-auto" />
               <span>© {new Date().getFullYear()} Gaivota Hotel. Todos os direitos reservados.</span>
             </div>
