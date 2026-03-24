@@ -9,7 +9,7 @@ import logoMastercard from "@/assets/logo-mastercard.png";
 
 const Footer = () => {
   return (
-    <footer className="bg-foreground text-primary-foreground/80">
+    <footer className="bg-foreground text-primary-foreground/80 text-base">
       <div className="container py-12 md:py-16">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 text-center">
           {/* Brand */}
