@@ -1,5 +1,9 @@
 import { Link } from "react-router-dom";
-import { Phone, Mail, MapPin, Instagram, CreditCard } from "lucide-react";
+import { Phone, Mail, MapPin, Instagram } from "lucide-react";
+import {
+  VisaLogo, MastercardLogo, EloLogo, PixLogo,
+  HipercardLogo, AmexLogo, BoletoLogo, BrazilFlag,
+} from "./PaymentLogos";
 
 const Footer = () => {
   return (
@@ -59,17 +63,21 @@ const Footer = () => {
 
         {/* Payment methods & bottom */}
         <div className="mt-10 pt-8 border-t border-primary-foreground/10">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3 flex-wrap justify-center">
-              <span className="text-xs uppercase tracking-wider mr-2">Formas de pagamento:</span>
-              {["Visa", "Master", "Elo", "Pix", "Hiper", "Amex"].map((card) => (
-                <span key={card} className="bg-primary-foreground/10 text-primary-foreground/70 text-xs px-2 py-1 rounded">
-                  {card}
-                </span>
-              ))}
+              <span className="text-xs uppercase tracking-wider mr-1 text-primary-foreground/50">Formas de pagamento:</span>
+              <div className="flex items-center gap-2 flex-wrap justify-center">
+                <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><VisaLogo className="h-5 w-auto" /></div>
+                <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><MastercardLogo className="h-5 w-auto" /></div>
+                <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><EloLogo className="h-5 w-auto" /></div>
+                <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><PixLogo className="h-5 w-auto" /></div>
+                <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><HipercardLogo className="h-5 w-auto" /></div>
+                <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><AmexLogo className="h-5 w-auto" /></div>
+                <div className="bg-white rounded px-2 py-1 flex items-center justify-center"><BoletoLogo className="h-5 w-auto" /></div>
+              </div>
             </div>
             <div className="flex items-center gap-2 text-xs">
-              <span>🇧🇷</span>
+              <BrazilFlag className="h-4 w-auto" />
               <span>© {new Date().getFullYear()} Gaivota Hotel. Todos os direitos reservados.</span>
             </div>
           </div>
