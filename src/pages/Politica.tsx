@@ -1,4 +1,5 @@
 import Layout from "@/components/Layout";
+import { ReviewsCarousel } from "@/components/ReviewsSection";
 import { Clock, Baby, CreditCard, PawPrint, CalendarCheck, AlertCircle } from "lucide-react";
 
 const Politica = () => (
@@ -20,7 +21,6 @@ const Politica = () => (
         </p>
 
         <div className="space-y-8">
-          {/* Cancelamento */}
           <div className="bg-card rounded-lg border p-6 md:p-8">
             <div className="flex items-center gap-3 mb-4">
               <CalendarCheck className="w-6 h-6 text-secondary" />
@@ -38,7 +38,6 @@ const Politica = () => (
             </ul>
           </div>
 
-          {/* Horários */}
           <div className="bg-card rounded-lg border p-6 md:p-8">
             <div className="flex items-center gap-3 mb-4">
               <Clock className="w-6 h-6 text-secondary" />
@@ -56,7 +55,6 @@ const Politica = () => (
             </div>
           </div>
 
-          {/* Crianças */}
           <div className="bg-card rounded-lg border p-6 md:p-8">
             <div className="flex items-center gap-3 mb-4">
               <Baby className="w-6 h-6 text-secondary" />
@@ -82,7 +80,6 @@ const Politica = () => (
             </ul>
           </div>
 
-          {/* Pets */}
           <div className="bg-card rounded-lg border p-6 md:p-8">
             <div className="flex items-center gap-3 mb-4">
               <PawPrint className="w-6 h-6 text-primary" />
@@ -96,7 +93,6 @@ const Politica = () => (
             </div>
           </div>
 
-          {/* Pagamento */}
           <div className="bg-card rounded-lg border p-6 md:p-8">
             <div className="flex items-center gap-3 mb-4">
               <CreditCard className="w-6 h-6 text-secondary" />
@@ -122,6 +118,9 @@ const Politica = () => (
         </div>
       </div>
     </section>
+
+    {/* Reviews Carousel */}
+    <ReviewsCarousel />
   </Layout>
 );
 
