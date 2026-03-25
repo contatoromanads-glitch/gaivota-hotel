@@ -4,6 +4,34 @@ import { Phone, Mail, MapPin, Instagram, Send } from "lucide-react";
 import { ReviewsCarousel } from "@/components/ReviewsSection";
 import { WHATSAPP_URL } from "@/lib/constants";
 import { ScrollReveal } from "@/hooks/useScrollReveal";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+
+const faqData = [
+  {
+    q: "O Gaivota Hotel oferece condições especiais para empresas e hospedagem de funcionários?",
+    a: "Sim, o Gaivota Hotel possui condições diferenciadas e flexíveis para hospedagem corporativa e faturamento para empresas que desejam acomodar seus funcionários em Eldorado dos Carajás. Entre em contato para mais detalhes sobre nossas soluções para empresas de diversos setores e necessidades de hospedagem.",
+  },
+  {
+    q: "O hotel está preparado para receber hóspedes a trabalho, como empresários e executivos?",
+    a: "Absolutamente. Nossas acomodações são projetadas para oferecer o máximo de conforto e funcionalidade para executivos e empresários, com Wi-Fi de alta velocidade, ambientes climatizados e mesa de trabalho, garantindo uma estadia produtiva e relaxante.",
+  },
+  {
+    q: "Qual a localização do Gaivota Hotel em relação às principais empresas e áreas de negócio em Eldorado dos Carajás?",
+    a: "Estamos estrategicamente localizados no centro de Eldorado dos Carajás, com fácil acesso às principais vias e áreas de interesse comercial e industrial, ideal para quem busca hotel próximo a grandes empresas e centros de negócio na região.",
+  },
+  {
+    q: "O café da manhã está incluído na diária e atende às necessidades de quem precisa começar o dia cedo para o trabalho?",
+    a: "Sim, nosso delicioso café da manhã buffet com opções regionais está sempre incluído na diária. Servimos um desjejum completo e reforçado, perfeito para garantir a energia necessária para um dia de trabalho intenso.",
+  },
+  {
+    q: "O hotel oferece estacionamento seguro para veículos de empresas?",
+    a: "Sim, dispomos de um amplo estacionamento coberto e seguro com capacidade para 30 carros, proporcionando tranquilidade para hóspedes que viajam com veículos próprios ou da empresa.",
+  },
+  {
+    q: "Como posso solicitar um orçamento ou fazer uma reserva para um grupo de funcionários da minha empresa?",
+    a: "Para orçamentos e reservas corporativas, por favor, entre em contato diretamente pelo telefone (94) 99285-4456 ou pelo nosso formulário de contato. Nossa equipe está pronta para oferecer a melhor solução para a sua empresa.",
+  },
+];
 
 const Contatos = () => {
   const [form, setForm] = useState({ nome: "", email: "", telefone: "", mensagem: "" });
