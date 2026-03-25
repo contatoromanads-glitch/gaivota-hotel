@@ -127,11 +127,34 @@ const Contatos = () => {
 
       <ReviewsCarousel />
 
+      {/* FAQ */}
+      <section className="py-16 bg-muted/30">
+        <div className="container max-w-3xl">
+          <ScrollReveal>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-8">Perguntas Frequentes</h2>
+          </ScrollReveal>
+          <ScrollReveal>
+            <Accordion type="single" collapsible className="space-y-3">
+              {faqData.map((item, i) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="bg-card border rounded-xl px-5 shadow-sm">
+                  <AccordionTrigger className="text-left text-sm md:text-base font-semibold hover:no-underline">
+                    {item.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground text-sm leading-relaxed">
+                    {item.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* Map */}
       <section className="h-[400px]">
         <iframe
           title="Localização Gaivota Hotel"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3924.5!2d-49.354!3d-6.1!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92d6a1!2sGaivota+Hotel!5e0!3m2!1spt-BR!2sbr!4v1"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3985.123!2d-49.3541234!3d-6.1012345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92d6a17f1c9b3a1d%3A0x1234567890abcdef!2sGaivota%20Hotel!5e0!3m2!1spt-BR!2sbr!4v1"
           className="w-full h-full border-0"
           allowFullScreen
           loading="lazy"
