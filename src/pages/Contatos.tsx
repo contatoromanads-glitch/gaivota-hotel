@@ -182,7 +182,7 @@ const Contatos = () => {
       <section className="h-[400px]">
         <iframe
           title="Localização Gaivota Hotel"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3985.123!2d-49.3541234!3d-6.1012345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92d6a17f1c9b3a1d%3A0x1234567890abcdef!2sGaivota%20Hotel!5e0!3m2!1spt-BR!2sbr!4v1"
+          src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Gaivota+Hotel,Eldorado+dos+Carajás,PA,Brazil&zoom=16"
           className="w-full h-full border-0"
           allowFullScreen
           loading="lazy"
