@@ -1,71 +1,37 @@
 import { useState, useEffect } from "react";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
 
-const reviews = [
-  {
-    name: "Geovane",
-    source: "Tripadvisor",
-    rating: 5,
-    text: "De todos os Hotéis de Eldorado este com certeza e o melhor, não deixa a desejar em nada. Bem localizado, oferece estacionamento grátis com suítes de luxos maravilhosas, um hotel novo porém muito útil pra quem procura conforto.",
-    time: "Tripadvisor",
-  },
-  {
-    name: "Zé Raimundo",
-    source: "Google",
-    rating: 5,
-    text: "Um excelente hotel com preço bastante justo... e excelente café da manhã... gostei da divisão dos quartos, ao invés de números, são vários animais da Amazônia... fiquei no quarto da Anta... a Internet do hotel é ótima... camas confortáveis e um banheiro adequado.",
-    time: "Google",
-  },
-  {
-    name: "Olacir Carvalho",
-    source: "Google",
-    rating: 4,
-    text: "Quartos completos bem confortáveis, ótimo café da manhã, é uma boa pedida para quem estiver na região...",
-    time: "Google",
-  },
-  {
-    name: "Adriano Xavier Santos",
-    source: "Google",
-    rating: 5,
-    text: "Um dos melhores hotel da região se não for o melhor, está de parabéns o hotel. O café da manhã é muito bom e farto, quartos limpos, banheiro impecável.",
-    time: "Google",
-  },
-  {
-    name: "Divino Eterno da Silva",
-    source: "Google",
-    rating: 5,
-    text: "Tudo muito bom, café da manhã nota dez, tudo de bom.",
-    time: "Google",
-  },
-  {
-    name: "Carlos Matias",
-    source: "Google",
-    rating: 5,
-    text: "Mesa com cadeira para trabalho com notebook, ar, frigobar e internet boa. Ambiente limpo e confortável e um bom café da manhã. Não tem como não recomendar!",
-    time: "Google",
-  },
-  {
-    name: "Servant Armando",
-    source: "Google",
-    rating: 4,
-    text: "Ótimas acomodações, enxoval de cama muito limpo e higienizado e um preço que vale a pena pagar com o complemento do café da manhã que é de bom para mais.",
-    time: "Google",
-  },
-  {
-    name: "Victor Hugo Gomes Valente",
-    source: "Google",
-    rating: 4,
-    text: "Pelo preço foi um excelente custo benefício.",
-    time: "Google",
-  },
-  {
-    name: "Luciana Martins",
-    source: "Google",
-    rating: 5,
-    text: "Ótimo hotel para interior, é limpo, bem localizado e seguro.",
-    time: "Google",
-  },
+interface Review {
+  id: string;
+  guest_name: string;
+  source: string;
+  rating: number;
+  text: string;
+}
+
+const fallbackReviews: Review[] = [
+  { id: "1", guest_name: "Geovane", source: "Tripadvisor", rating: 5, text: "De todos os Hotéis de Eldorado este com certeza e o melhor, não deixa a desejar em nada." },
+  { id: "2", guest_name: "Zé Raimundo", source: "Google", rating: 5, text: "Um excelente hotel com preço bastante justo... e excelente café da manhã..." },
+  { id: "3", guest_name: "Carlos Matias", source: "Google", rating: 5, text: "Ambiente limpo e confortável e um bom café da manhã. Não tem como não recomendar!" },
 ];
+
+const useReviews = () => {
+  const [reviews, setReviews] = useState<Review[]>(fallbackReviews);
+
+  useEffect(() => {
+    supabase
+      .from("reviews")
+      .select("id, guest_name, source, rating, text")
+      .eq("is_visible", true)
+      .order("display_order")
+      .then(({ data }) => {
+        if (data && data.length > 0) setReviews(data);
+      });
+  }, []);
+
+  return reviews;
+};
 
 const StarRating = ({ rating }: { rating: number }) => (
   <div className="flex gap-0.5">
@@ -78,15 +44,15 @@ const StarRating = ({ rating }: { rating: number }) => (
   </div>
 );
 
-const ReviewCard = ({ review }: { review: typeof reviews[0] }) => (
+const ReviewCard = ({ review }: { review: Review }) => (
   <div className="bg-card rounded-lg border p-6 shadow-sm flex flex-col h-full">
     <div className="flex items-center justify-between mb-3">
       <div className="flex items-center gap-3">
         <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-bold text-sm">
-          {review.name.charAt(0)}
+          {review.guest_name.charAt(0)}
         </div>
         <div>
-          <p className="font-semibold text-sm">{review.name}</p>
+          <p className="font-semibold text-sm">{review.guest_name}</p>
           <p className="text-xs text-muted-foreground">{review.source}</p>
         </div>
       </div>
@@ -98,42 +64,48 @@ const ReviewCard = ({ review }: { review: typeof reviews[0] }) => (
 );
 
 /** Full section for Home page */
-export const ReviewsFull = () => (
-  <section className="py-16 md:py-24 bg-warm">
-    <div className="container">
-      <div className="text-center mb-12">
-        <span className="text-accent font-semibold text-sm uppercase tracking-widest">Avaliações</span>
-        <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">
-          O Que Nossos Hóspedes Dizem
-        </h2>
-        <p className="text-muted-foreground max-w-2xl mx-auto">
-          Avaliações reais de quem já se hospedou no Gaivota Hotel.
-        </p>
+export const ReviewsFull = () => {
+  const reviews = useReviews();
+
+  return (
+    <section className="py-16 md:py-24 bg-warm">
+      <div className="container">
+        <div className="text-center mb-12">
+          <span className="text-accent font-semibold text-sm uppercase tracking-widest">Avaliações</span>
+          <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">
+            O Que Nossos Hóspedes Dizem
+          </h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">
+            Avaliações reais de quem já se hospedou no Gaivota Hotel.
+          </p>
+        </div>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          {reviews.map((r, i) => (
+            <div key={r.id} className="opacity-0 animate-fade-in-up" style={{ animationDelay: `${i * 0.08}s` }}>
+              <ReviewCard review={r} />
+            </div>
+          ))}
+        </div>
       </div>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {reviews.map((r, i) => (
-          <div key={r.name} className="opacity-0 animate-fade-in-up" style={{ animationDelay: `${i * 0.08}s` }}>
-            <ReviewCard review={r} />
-          </div>
-        ))}
-      </div>
-    </div>
-  </section>
-);
+    </section>
+  );
+};
 
 /** Compact carousel for other pages */
 export const ReviewsCarousel = () => {
+  const reviews = useReviews();
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrent((c) => (c + 1) % reviews.length), 6000);
     return () => clearInterval(timer);
-  }, []);
+  }, [reviews.length]);
 
   const prev = () => setCurrent((c) => (c - 1 + reviews.length) % reviews.length);
   const next = () => setCurrent((c) => (c + 1) % reviews.length);
 
-  const review = reviews[current];
+  if (reviews.length === 0) return null;
+  const review = reviews[current % reviews.length];
 
   return (
     <section className="py-10 bg-warm">
@@ -153,10 +125,10 @@ export const ReviewsCarousel = () => {
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-secondary/20 flex items-center justify-center text-secondary font-bold text-sm">
-                {review.name.charAt(0)}
+                {review.guest_name.charAt(0)}
               </div>
               <div>
-                <p className="font-semibold text-sm">{review.name}</p>
+                <p className="font-semibold text-sm">{review.guest_name}</p>
                 <p className="text-xs text-muted-foreground">{review.source}</p>
               </div>
             </div>
