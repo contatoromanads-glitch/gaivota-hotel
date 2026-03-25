@@ -1,56 +1,95 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Layout from "@/components/Layout";
 import { ReviewsCarousel } from "@/components/ReviewsSection";
 import { WHATSAPP_URL } from "@/lib/constants";
 import { ScrollReveal } from "@/hooks/useScrollReveal";
 import ImageLightbox from "@/components/ImageLightbox";
+import { supabase } from "@/integrations/supabase/client";
 import hotelCorredor from "@/assets/hotel-corredor.jpeg";
-import hotelBanheiro from "@/assets/hotel-banheiro.jpeg";
-import hotelBanheiro2 from "@/assets/hotel-banheiro2.jpeg";
-import hotelQuarto from "@/assets/hotel-quarto.jpeg";
-import hotelQuartoIndividual from "@/assets/hotel-quarto-individual.jpeg";
-import hotelQuartoIndividual2 from "@/assets/hotel-quarto-individual2.jpeg";
-import hotelQuartoIndividual3 from "@/assets/hotel-quarto-individual3.jpeg";
-import hotelQuartoMutum from "@/assets/hotel-quarto-mutum.jpeg";
-import hotelQuartoColeirinho from "@/assets/hotel-quarto-coleirinho.jpeg";
-import hotelQuartoTamandua from "@/assets/hotel-quarto-tamandua.jpeg";
-import hotelQuartoBeijaflor from "@/assets/hotel-quarto-beijaflor.jpeg";
-import hotelQuartoPeixeboi from "@/assets/hotel-quarto-peixeboi.jpeg";
-import hotelQuartoCasal from "@/assets/hotel-quarto-casal.jpeg";
-import hotelQuartoCapivara from "@/assets/hotel-quarto-capivara.jpeg";
-import hotelQuartoAnta from "@/assets/hotel-quarto-anta.jpeg";
-import hotelQuartoSagui from "@/assets/hotel-quarto-sagui.jpeg";
-import hotelQuartoOncaNegra from "@/assets/hotel-quarto-oncanegra.jpeg";
 
-const rooms = [
-  { name: "Quarto Individual Deluxe", beds: "1 cama de solteiro", size: "", image: hotelQuartoCapivara, amenities: ["Ar-condicionado", "TV tela plana", "Wi-Fi", "Frigobar", "Banheiro privativo", "Mesa de trabalho", "Guarda-roupa"], highlight: false },
-  { name: "Quarto Deluxe com 2 Camas", beds: "2 camas de solteiro", size: "16 m²", image: hotelQuartoSagui, amenities: ["Ar-condicionado", "TV tela plana", "Wi-Fi", "Frigobar", "Banheiro privativo"], highlight: false },
-  { name: "Quarto Deluxe Casal", beds: "1 cama de casal", size: "50 m²", image: hotelQuartoBeijaflor, amenities: ["Ar-condicionado", "TV tela plana", "Wi-Fi", "Frigobar", "Banheira", "Hidromassagem", "Banheiro privativo"], highlight: true },
-  { name: "Quarto Triplo Deluxe", beds: "1 solteiro + 1 casal", size: "", image: hotelQuartoOncaNegra, amenities: ["Ar-condicionado", "TV tela plana", "Wi-Fi", "Frigobar", "Banheiro privativo"], highlight: false },
-  { name: "Quarto Triplo Luxo", beds: "3 hóspedes", size: "20 m²", image: hotelQuartoMutum, amenities: ["Ar-condicionado", "TV tela plana", "Wi-Fi", "Frigobar", "Banheiro privativo"], highlight: false },
-  { name: "Quarto Quádruplo Deluxe", beds: "4 hóspedes", size: "", image: hotelQuartoAnta, amenities: ["Wi-Fi", "Ar-condicionado", "TV tela plana", "Frigobar", "Banheiro privativo"], highlight: false },
-];
+interface Room {
+  id: string;
+  name: string;
+  description: string | null;
+  beds: string;
+  size: string | null;
+  amenities: string[];
+  highlight: boolean | null;
+  display_order: number | null;
+}
 
-const galleryImages = [
-  { src: hotelQuarto, alt: "Quarto decorado com cisnes de toalha" },
-  { src: hotelQuartoPeixeboi, alt: "Quarto Peixe-Boi" },
-  { src: hotelQuartoColeirinho, alt: "Quarto Coleirinho" },
-  { src: hotelQuartoTamandua, alt: "Quarto Tamanduá Bandeira" },
-  { src: hotelQuartoIndividual, alt: "Quarto Individual com TV e frigobar" },
-  { src: hotelQuartoIndividual2, alt: "Quarto Individual" },
-  { src: hotelQuartoIndividual3, alt: "Quarto com espelho e frigobar" },
-  { src: hotelQuartoCasal, alt: "Quarto de Casal" },
-  { src: hotelBanheiro, alt: "Banheiro com pastilhas vermelhas" },
-  { src: hotelBanheiro2, alt: "Banheiro privativo" },
-];
-
-const allImages = [
-  ...rooms.map((r) => ({ src: r.image, alt: r.name })),
-  ...galleryImages,
-];
+interface RoomImage {
+  id: string;
+  room_id: string;
+  image_url: string;
+  alt_text: string | null;
+  display_order: number | null;
+}
 
 const Quartos = () => {
+  const [rooms, setRooms] = useState<Room[]>([]);
+  const [roomImages, setRoomImages] = useState<Record<string, RoomImage[]>>({});
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  const loadData = async () => {
+    const [roomsRes, imagesRes] = await Promise.all([
+      supabase.from("rooms").select("*").order("display_order"),
+      supabase.from("room_images").select("*").order("display_order"),
+    ]);
+
+    if (roomsRes.data) {
+      setRooms(roomsRes.data.map((r) => ({ ...r, amenities: (r.amenities as string[]) || [] })));
+    }
+    if (imagesRes.data) {
+      const grouped: Record<string, RoomImage[]> = {};
+      imagesRes.data.forEach((img) => {
+        if (!grouped[img.room_id]) grouped[img.room_id] = [];
+        grouped[img.room_id].push(img);
+      });
+      setRoomImages(grouped);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    loadData();
+
+    // Realtime sync
+    const roomsChannel = supabase
+      .channel("rooms-public")
+      .on("postgres_changes", { event: "*", schema: "public", table: "rooms" }, () => loadData())
+      .on("postgres_changes", { event: "*", schema: "public", table: "room_images" }, () => loadData())
+      .subscribe();
+
+    return () => { supabase.removeChannel(roomsChannel); };
+  }, []);
+
+  // Build all images for lightbox
+  const allImages: { src: string; alt: string }[] = [];
+  rooms.forEach((room) => {
+    const imgs = roomImages[room.id] || [];
+    imgs.forEach((img) => {
+      allImages.push({ src: img.image_url, alt: img.alt_text || room.name });
+    });
+  });
+
+  // Get first image for each room
+  const getRoomMainImage = (roomId: string) => {
+    const imgs = roomImages[roomId];
+    return imgs && imgs.length > 0 ? imgs[0].image_url : hotelCorredor;
+  };
+
+  // Get lightbox index for a room's main image
+  const getRoomLightboxIndex = (roomId: string) => {
+    let index = 0;
+    for (const room of rooms) {
+      const imgs = roomImages[room.id] || [];
+      if (room.id === roomId) return index;
+      index += imgs.length;
+    }
+    return 0;
+  };
 
   return (
     <Layout>
@@ -83,61 +122,80 @@ const Quartos = () => {
           <ScrollReveal>
             <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">Tipos de Quartos</h2>
           </ScrollReveal>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {rooms.map((room, i) => (
-              <ScrollReveal key={room.name} delay={i * 0.08} direction="up">
-                <div className={`rounded-lg border overflow-hidden transition-shadow hover:shadow-lg h-full ${room.highlight ? "border-primary bg-primary/5" : "bg-card"}`}>
-                  <img
-                    src={room.image}
-                    alt={room.name}
-                    className="w-full h-52 object-cover cursor-pointer img-hover"
-                    onClick={() => setLightboxIndex(i)}
-                  />
-                  <div className="p-6">
-                    {room.highlight && <span className="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">★ Destaque</span>}
-                    <h3 className="font-display text-lg font-semibold mb-1">{room.name}</h3>
-                    <p className="text-sm text-muted-foreground mb-1">{room.beds}</p>
-                    {room.size && <p className="text-sm text-accent font-medium mb-3">{room.size}</p>}
-                    <ul className="space-y-1 mt-3">
-                      {room.amenities.map((a) => (
-                        <li key={a} className="text-sm text-muted-foreground flex items-center gap-2">
-                          <span className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
-                          {a}
-                        </li>
-                      ))}
-                    </ul>
-                    <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="cta-pulse mt-5 block text-center bg-primary text-primary-foreground py-2.5 rounded-md text-sm font-semibold">
-                      Reservar
-                    </a>
+
+          {loading ? (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="rounded-lg border bg-card animate-pulse">
+                  <div className="w-full h-52 bg-muted" />
+                  <div className="p-6 space-y-3">
+                    <div className="h-5 bg-muted rounded w-3/4" />
+                    <div className="h-4 bg-muted rounded w-1/2" />
+                    <div className="h-4 bg-muted rounded w-2/3" />
                   </div>
                 </div>
-              </ScrollReveal>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {rooms.map((room, i) => (
+                <ScrollReveal key={room.id} delay={i * 0.08} direction="up">
+                  <div className={`rounded-lg border overflow-hidden transition-shadow hover:shadow-lg h-full ${room.highlight ? "border-primary bg-primary/5" : "bg-card"}`}>
+                    <img
+                      src={getRoomMainImage(room.id)}
+                      alt={room.name}
+                      className="w-full h-52 object-cover cursor-pointer img-hover"
+                      onClick={() => setLightboxIndex(getRoomLightboxIndex(room.id))}
+                    />
+                    <div className="p-6">
+                      {room.highlight && <span className="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">★ Destaque</span>}
+                      <h3 className="font-display text-lg font-semibold mb-1">{room.name}</h3>
+                      <p className="text-sm text-muted-foreground mb-1">{room.beds}</p>
+                      {room.size && <p className="text-sm text-accent font-medium mb-3">{room.size}</p>}
+                      <ul className="space-y-1 mt-3">
+                        {room.amenities.map((a) => (
+                          <li key={a} className="text-sm text-muted-foreground flex items-center gap-2">
+                            <span className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
+                            {a}
+                          </li>
+                        ))}
+                      </ul>
+                      <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="cta-pulse mt-5 block text-center bg-primary text-primary-foreground py-2.5 rounded-md text-sm font-semibold">
+                        Reservar
+                      </a>
+                    </div>
+                  </div>
+                </ScrollReveal>
+              ))}
+            </div>
+          )}
+
           <p className="text-xs text-muted-foreground text-center mt-8">* Preços são referência e podem variar conforme temporada. Nenhum quarto possui cofre.</p>
         </div>
       </section>
 
-      {/* Gallery */}
-      <section className="py-16 bg-warm">
-        <div className="container">
-          <ScrollReveal>
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">Galeria de Fotos</h2>
-          </ScrollReveal>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
-            {galleryImages.map((img, i) => (
-              <ScrollReveal key={img.alt} delay={i * 0.05} direction="scale">
-                <img
-                  src={img.src}
-                  alt={img.alt}
-                  className="rounded-lg shadow-sm w-full h-40 object-cover img-hover cursor-pointer"
-                  onClick={() => setLightboxIndex(rooms.length + i)}
-                />
-              </ScrollReveal>
-            ))}
+      {/* Gallery - all room images */}
+      {allImages.length > 0 && (
+        <section className="py-16 bg-warm">
+          <div className="container">
+            <ScrollReveal>
+              <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">Galeria de Fotos</h2>
+            </ScrollReveal>
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+              {allImages.map((img, i) => (
+                <ScrollReveal key={i} delay={i * 0.05} direction="scale">
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="rounded-lg shadow-sm w-full h-40 object-cover img-hover cursor-pointer"
+                    onClick={() => setLightboxIndex(i)}
+                  />
+                </ScrollReveal>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <ReviewsCarousel />
 
