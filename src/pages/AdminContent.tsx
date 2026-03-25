@@ -71,15 +71,16 @@ const AdminContent = () => {
     setSaving(key);
     const block = getBlock(pageSlug, sectionKey);
 
+    const jsonContent = JSON.parse(JSON.stringify(block.content));
     if (block.id) {
-      const { error } = await supabase.from("page_content").update({ content: block.content as unknown as Record<string, unknown> }).eq("id", block.id);
+      const { error } = await supabase.from("page_content").update({ content: jsonContent }).eq("id", block.id);
       if (error) { toast.error(error.message); setSaving(null); return; }
     } else {
-      const { error, data } = await supabase.from("page_content").insert({
+      const { error, data } = await supabase.from("page_content").insert([{
         page_slug: pageSlug,
         section_key: sectionKey,
-        content: block.content as unknown as Record<string, unknown>,
-      }).select().single();
+        content: jsonContent,
+      }]).select().single();
       if (error) { toast.error(error.message); setSaving(null); return; }
       if (data) setBlocks({ ...blocks, [key]: { ...block, id: data.id } });
     }

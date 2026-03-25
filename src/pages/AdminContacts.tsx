@@ -45,12 +45,13 @@ const AdminContacts = () => {
   const handleSave = async () => {
     setSaving(true);
     const { data: existing } = await supabase.from("site_settings").select("id").eq("key", "contacts").maybeSingle();
+    const jsonValue = JSON.parse(JSON.stringify(contacts));
     
     if (existing) {
-      const { error } = await supabase.from("site_settings").update({ value: contacts as unknown as Record<string, unknown> }).eq("key", "contacts");
+      const { error } = await supabase.from("site_settings").update({ value: jsonValue }).eq("key", "contacts");
       if (error) { toast.error(error.message); setSaving(false); return; }
     } else {
-      const { error } = await supabase.from("site_settings").insert({ key: "contacts", value: contacts as unknown as Record<string, unknown> });
+      const { error } = await supabase.from("site_settings").insert([{ key: "contacts", value: jsonValue }]);
       if (error) { toast.error(error.message); setSaving(false); return; }
     }
     

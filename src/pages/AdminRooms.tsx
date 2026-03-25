@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Pencil, Trash2, X, Upload, GripVertical } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Upload, GripVertical, BedDouble } from "lucide-react";
 import { toast } from "sonner";
 
 interface Room {
