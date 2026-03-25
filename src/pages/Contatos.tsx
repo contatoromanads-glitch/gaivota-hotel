@@ -4,6 +4,34 @@ import { Phone, Mail, MapPin, Instagram, Send } from "lucide-react";
 import { ReviewsCarousel } from "@/components/ReviewsSection";
 import { WHATSAPP_URL } from "@/lib/constants";
 import { ScrollReveal } from "@/hooks/useScrollReveal";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+
+const faqData = [
+  {
+    q: "O Gaivota Hotel oferece condições especiais para empresas e hospedagem de funcionários?",
+    a: "Sim, o Gaivota Hotel possui condições diferenciadas e flexíveis para hospedagem corporativa e faturamento para empresas que desejam acomodar seus funcionários em Eldorado dos Carajás. Entre em contato para mais detalhes sobre nossas soluções para empresas de diversos setores e necessidades de hospedagem.",
+  },
+  {
+    q: "O hotel está preparado para receber hóspedes a trabalho, como empresários e executivos?",
+    a: "Absolutamente. Nossas acomodações são projetadas para oferecer o máximo de conforto e funcionalidade para executivos e empresários, com Wi-Fi de alta velocidade, ambientes climatizados e mesa de trabalho, garantindo uma estadia produtiva e relaxante.",
+  },
+  {
+    q: "Qual a localização do Gaivota Hotel em relação às principais empresas e áreas de negócio em Eldorado dos Carajás?",
+    a: "Estamos estrategicamente localizados no centro de Eldorado dos Carajás, com fácil acesso às principais vias e áreas de interesse comercial e industrial, ideal para quem busca hotel próximo a grandes empresas e centros de negócio na região.",
+  },
+  {
+    q: "O café da manhã está incluído na diária e atende às necessidades de quem precisa começar o dia cedo para o trabalho?",
+    a: "Sim, nosso delicioso café da manhã buffet com opções regionais está sempre incluído na diária. Servimos um desjejum completo e reforçado, perfeito para garantir a energia necessária para um dia de trabalho intenso.",
+  },
+  {
+    q: "O hotel oferece estacionamento seguro para veículos de empresas?",
+    a: "Sim, dispomos de um amplo estacionamento coberto e seguro com capacidade para 30 carros, proporcionando tranquilidade para hóspedes que viajam com veículos próprios ou da empresa.",
+  },
+  {
+    q: "Como posso solicitar um orçamento ou fazer uma reserva para um grupo de funcionários da minha empresa?",
+    a: "Para orçamentos e reservas corporativas, por favor, entre em contato diretamente pelo telefone (94) 99285-4456 ou pelo nosso formulário de contato. Nossa equipe está pronta para oferecer a melhor solução para a sua empresa.",
+  },
+];
 
 const Contatos = () => {
   const [form, setForm] = useState({ nome: "", email: "", telefone: "", mensagem: "" });
@@ -127,11 +155,34 @@ const Contatos = () => {
 
       <ReviewsCarousel />
 
+      {/* FAQ */}
+      <section className="py-16 bg-muted/30">
+        <div className="container max-w-3xl">
+          <ScrollReveal>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-8">Perguntas Frequentes</h2>
+          </ScrollReveal>
+          <ScrollReveal>
+            <Accordion type="single" collapsible className="space-y-3">
+              {faqData.map((item, i) => (
+                <AccordionItem key={i} value={`faq-${i}`} className="bg-card border rounded-xl px-5 shadow-sm">
+                  <AccordionTrigger className="text-left text-sm md:text-base font-semibold hover:no-underline">
+                    {item.q}
+                  </AccordionTrigger>
+                  <AccordionContent className="text-muted-foreground text-sm leading-relaxed">
+                    {item.a}
+                  </AccordionContent>
+                </AccordionItem>
+              ))}
+            </Accordion>
+          </ScrollReveal>
+        </div>
+      </section>
+
       {/* Map */}
       <section className="h-[400px]">
         <iframe
           title="Localização Gaivota Hotel"
-          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3924.5!2d-49.354!3d-6.1!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x92d6a1!2sGaivota+Hotel!5e0!3m2!1spt-BR!2sbr!4v1"
+          src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Gaivota+Hotel,Eldorado+dos+Carajás,PA,Brazil&zoom=16"
           className="w-full h-full border-0"
           allowFullScreen
           loading="lazy"
