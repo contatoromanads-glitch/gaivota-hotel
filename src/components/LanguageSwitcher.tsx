@@ -1,9 +1,12 @@
 import { useTranslation } from "react-i18next";
+import flagBR from "@/assets/flag-br.png";
+import flagUS from "@/assets/flag-us.png";
+import flagES from "@/assets/flag-es.png";
 
 const languages = [
-  { code: "pt", flag: "🇧🇷", label: "Português" },
-  { code: "en", flag: "🇺🇸", label: "English" },
-  { code: "es", flag: "🇪🇸", label: "Español" },
+  { code: "pt", flag: flagBR, label: "Português" },
+  { code: "en", flag: flagUS, label: "English" },
+  { code: "es", flag: flagES, label: "Español" },
 ];
 
 const LanguageSwitcher = () => {
@@ -11,19 +14,23 @@ const LanguageSwitcher = () => {
   const currentLang = i18n.language?.substring(0, 2) || "pt";
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-1.5">
       {languages.map((lang) => (
         <button
           key={lang.code}
           onClick={() => i18n.changeLanguage(lang.code)}
           title={lang.label}
-          className={`text-lg leading-none w-8 h-8 rounded-full flex items-center justify-center transition-all duration-200 ${
+          className={`w-7 h-7 rounded-full overflow-hidden border-2 transition-all duration-200 flex-shrink-0 ${
             currentLang === lang.code
-              ? "bg-primary/20 scale-110 ring-2 ring-accent"
-              : "hover:bg-primary-foreground/10 opacity-70 hover:opacity-100"
+              ? "border-white scale-110 shadow-md"
+              : "border-white/40 opacity-60 hover:opacity-100 hover:border-white/70"
           }`}
         >
-          {lang.flag}
+          <img
+            src={lang.flag}
+            alt={lang.label}
+            className="w-full h-full object-cover"
+          />
         </button>
       ))}
     </div>
