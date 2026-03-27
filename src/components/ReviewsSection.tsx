@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import { Star, ChevronLeft, ChevronRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslatedContent } from "@/hooks/useTranslatedContent";
 
 interface Review {
   id: string;
@@ -44,7 +46,7 @@ const StarRating = ({ rating }: { rating: number }) => (
   </div>
 );
 
-const ReviewCard = ({ review }: { review: Review }) => (
+const ReviewCard = ({ review, translatedText }: { review: Review; translatedText: string }) => (
   <div className="bg-card rounded-lg border p-6 shadow-sm flex flex-col h-full">
     <div className="flex items-center justify-between mb-3">
       <div className="flex items-center gap-3">
@@ -59,30 +61,28 @@ const ReviewCard = ({ review }: { review: Review }) => (
       <span className="text-lg font-bold text-primary">{review.rating}/5</span>
     </div>
     <StarRating rating={review.rating} />
-    <p className="text-muted-foreground text-sm leading-relaxed mt-3 flex-1">"{review.text}"</p>
+    <p className="text-muted-foreground text-sm leading-relaxed mt-3 flex-1">"{translatedText}"</p>
   </div>
 );
 
 /** Full section for Home page */
 export const ReviewsFull = () => {
   const reviews = useReviews();
+  const { t } = useTranslation();
+  const translatedTexts = useTranslatedContent(reviews.map((r) => r.text));
 
   return (
     <section className="py-16 md:py-24 bg-warm">
       <div className="container">
         <div className="text-center mb-12">
-          <span className="text-accent font-semibold text-sm uppercase tracking-widest">Avaliações</span>
-          <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">
-            O Que Nossos Hóspedes Dizem
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Avaliações reais de quem já se hospedou no Gaivota Hotel.
-          </p>
+          <span className="text-accent font-semibold text-sm uppercase tracking-widest">{t("reviews.tag")}</span>
+          <h2 className="font-display text-3xl md:text-4xl font-bold mt-2 mb-4">{t("reviews.title")}</h2>
+          <p className="text-muted-foreground max-w-2xl mx-auto">{t("reviews.desc")}</p>
         </div>
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {reviews.map((r, i) => (
             <div key={r.id} className="opacity-0 animate-fade-in-up" style={{ animationDelay: `${i * 0.08}s` }}>
-              <ReviewCard review={r} />
+              <ReviewCard review={r} translatedText={translatedTexts[i] || r.text} />
             </div>
           ))}
         </div>
@@ -94,6 +94,8 @@ export const ReviewsFull = () => {
 /** Compact carousel for other pages */
 export const ReviewsCarousel = () => {
   const reviews = useReviews();
+  const { t } = useTranslation();
+  const translatedTexts = useTranslatedContent(reviews.map((r) => r.text));
   const [current, setCurrent] = useState(0);
 
   useEffect(() => {
@@ -111,7 +113,7 @@ export const ReviewsCarousel = () => {
     <section className="py-10 bg-warm">
       <div className="container max-w-2xl">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-display text-lg font-semibold">Avaliações de Hóspedes</h3>
+          <h3 className="font-display text-lg font-semibold">{t("reviews.carouselTitle")}</h3>
           <div className="flex gap-2">
             <button onClick={prev} className="w-8 h-8 rounded-full border flex items-center justify-center hover:bg-card transition-colors">
               <ChevronLeft className="w-4 h-4" />
@@ -135,7 +137,7 @@ export const ReviewsCarousel = () => {
             <span className="text-lg font-bold text-primary">{review.rating}/5</span>
           </div>
           <StarRating rating={review.rating} />
-          <p className="text-muted-foreground text-sm leading-relaxed mt-3">"{review.text}"</p>
+          <p className="text-muted-foreground text-sm leading-relaxed mt-3">"{translatedTexts[current % reviews.length] || review.text}"</p>
         </div>
         <div className="flex justify-center gap-1.5 mt-4">
           {reviews.map((_, i) => (
