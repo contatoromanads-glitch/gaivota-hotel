@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import Layout from "@/components/Layout";
 import { ReviewsCarousel } from "@/components/ReviewsSection";
 import { WHATSAPP_URL } from "@/lib/constants";
 import { ScrollReveal } from "@/hooks/useScrollReveal";
 import ImageLightbox from "@/components/ImageLightbox";
 import { supabase } from "@/integrations/supabase/client";
+import { useTranslatedContent } from "@/hooks/useTranslatedContent";
 import hotelCorredor from "@/assets/hotel-corredor.jpeg";
 
 interface Room {
@@ -27,10 +29,28 @@ interface RoomImage {
 }
 
 const Quartos = () => {
+  const { t } = useTranslation();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [roomImages, setRoomImages] = useState<Record<string, RoomImage[]>>({});
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+
+  // Collect all translatable texts from rooms
+  const roomTexts = rooms.flatMap((r) => [r.name, r.beds, r.description || "", ...(r.amenities || [])]);
+  const translatedRoomTexts = useTranslatedContent(roomTexts);
+
+  // Helper to get translated text for a room
+  const getTranslatedRoom = (roomIndex: number) => {
+    const room = rooms[roomIndex];
+    const amenityCount = rooms.slice(0, roomIndex).reduce((acc, r) => acc + (r.amenities?.length || 0), 0);
+    const baseIndex = roomIndex * 3 + amenityCount;
+    return {
+      name: translatedRoomTexts[baseIndex] || room.name,
+      beds: translatedRoomTexts[baseIndex + 1] || room.beds,
+      description: translatedRoomTexts[baseIndex + 2] || room.description || "",
+      amenities: room.amenities.map((_, ai) => translatedRoomTexts[baseIndex + 3 + ai] || room.amenities[ai]),
+    };
+  };
 
   const loadData = async () => {
     const [roomsRes, imagesRes] = await Promise.all([
@@ -54,73 +74,58 @@ const Quartos = () => {
 
   useEffect(() => {
     loadData();
-
-    // Realtime sync
     const roomsChannel = supabase
       .channel("rooms-public")
       .on("postgres_changes", { event: "*", schema: "public", table: "rooms" }, () => loadData())
       .on("postgres_changes", { event: "*", schema: "public", table: "room_images" }, () => loadData())
       .subscribe();
-
     return () => { supabase.removeChannel(roomsChannel); };
   }, []);
 
-  // Build all images for lightbox
   const allImages: { src: string; alt: string }[] = [];
   rooms.forEach((room) => {
-    const imgs = roomImages[room.id] || [];
-    imgs.forEach((img) => {
+    (roomImages[room.id] || []).forEach((img) => {
       allImages.push({ src: img.image_url, alt: img.alt_text || room.name });
     });
   });
 
-  // Get first image for each room
   const getRoomMainImage = (roomId: string) => {
     const imgs = roomImages[roomId];
     return imgs && imgs.length > 0 ? imgs[0].image_url : hotelCorredor;
   };
 
-  // Get lightbox index for a room's main image
   const getRoomLightboxIndex = (roomId: string) => {
     let index = 0;
     for (const room of rooms) {
-      const imgs = roomImages[room.id] || [];
       if (room.id === roomId) return index;
-      index += imgs.length;
+      index += (roomImages[room.id] || []).length;
     }
     return 0;
   };
 
   return (
     <Layout>
-      {/* Hero */}
       <section className="relative h-[50vh] min-h-[300px] flex items-center justify-center overflow-hidden">
         <img src={hotelCorredor} alt="Corredor do hotel" className="absolute inset-0 w-full h-full object-cover" />
         <div className="absolute inset-0 bg-foreground/70" />
         <div className="relative z-10 text-center px-4">
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-white text-shadow-hero mb-3 animate-fade-in-up">Nossas Acomodações</h1>
-          <p className="text-white/85 text-lg max-w-xl mx-auto animate-fade-in-up" style={{ animationDelay: "0.2s" }}>Conforto e temática amazônica em cada detalhe</p>
+          <h1 className="font-display text-4xl md:text-5xl font-bold text-white text-shadow-hero mb-3 animate-fade-in-up">{t("quartos.heroTitle")}</h1>
+          <p className="text-white/85 text-lg max-w-xl mx-auto animate-fade-in-up" style={{ animationDelay: "0.2s" }}>{t("quartos.heroSubtitle")}</p>
         </div>
       </section>
 
-      {/* Intro */}
       <section className="py-12 bg-warm">
         <div className="container max-w-3xl text-center">
           <ScrollReveal>
-            <p className="text-muted-foreground leading-relaxed">
-              Cada quarto é um convite ao relaxamento, com decoração inspirada na fauna e flora da Amazônia.
-              Acomodações espaçosas, climatizadas e equipadas com aquecimento de água solar, frigobar e banheiro privativo.
-              Todos os quartos incluem <strong className="text-foreground">café da manhã regional</strong>.
-            </p>
+            <p className="text-muted-foreground leading-relaxed" dangerouslySetInnerHTML={{ __html: t("quartos.introText") }} />
           </ScrollReveal>
         </div>
       </section>
 
-      {/* Rooms Grid */}
       <section className="py-16">
         <div className="container">
           <ScrollReveal>
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">Tipos de Quartos</h2>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">{t("quartos.tiposTitle")}</h2>
           </ScrollReveal>
 
           {loading ? (
@@ -138,48 +143,50 @@ const Quartos = () => {
             </div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {rooms.map((room, i) => (
-                <ScrollReveal key={room.id} delay={i * 0.08} direction="up">
-                  <div className={`rounded-lg border overflow-hidden transition-shadow hover:shadow-lg h-full ${room.highlight ? "border-primary bg-primary/5" : "bg-card"}`}>
-                    <img
-                      src={getRoomMainImage(room.id)}
-                      alt={room.name}
-                      className="w-full h-52 object-cover cursor-pointer img-hover"
-                      onClick={() => setLightboxIndex(getRoomLightboxIndex(room.id))}
-                    />
-                    <div className="p-6">
-                      {room.highlight && <span className="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">★ Destaque</span>}
-                      <h3 className="font-display text-lg font-semibold mb-1">{room.name}</h3>
-                      <p className="text-sm text-muted-foreground mb-1">{room.beds}</p>
-                      {room.size && <p className="text-sm text-accent font-medium mb-3">{room.size}</p>}
-                      <ul className="space-y-1 mt-3">
-                        {room.amenities.map((a) => (
-                          <li key={a} className="text-sm text-muted-foreground flex items-center gap-2">
-                            <span className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
-                            {a}
-                          </li>
-                        ))}
-                      </ul>
-                      <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="cta-pulse mt-5 block text-center bg-primary text-primary-foreground py-2.5 rounded-md text-sm font-semibold">
-                        Reservar
-                      </a>
+              {rooms.map((room, i) => {
+                const tr = getTranslatedRoom(i);
+                return (
+                  <ScrollReveal key={room.id} delay={i * 0.08} direction="up">
+                    <div className={`rounded-lg border overflow-hidden transition-shadow hover:shadow-lg h-full ${room.highlight ? "border-primary bg-primary/5" : "bg-card"}`}>
+                      <img
+                        src={getRoomMainImage(room.id)}
+                        alt={tr.name}
+                        className="w-full h-52 object-cover cursor-pointer img-hover"
+                        onClick={() => setLightboxIndex(getRoomLightboxIndex(room.id))}
+                      />
+                      <div className="p-6">
+                        {room.highlight && <span className="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">{t("quartos.destaque")}</span>}
+                        <h3 className="font-display text-lg font-semibold mb-1">{tr.name}</h3>
+                        <p className="text-sm text-muted-foreground mb-1">{tr.beds}</p>
+                        {room.size && <p className="text-sm text-accent font-medium mb-3">{room.size}</p>}
+                        <ul className="space-y-1 mt-3">
+                          {tr.amenities.map((a, ai) => (
+                            <li key={ai} className="text-sm text-muted-foreground flex items-center gap-2">
+                              <span className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
+                              {a}
+                            </li>
+                          ))}
+                        </ul>
+                        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="cta-pulse mt-5 block text-center bg-primary text-primary-foreground py-2.5 rounded-md text-sm font-semibold">
+                          {t("quartos.reservar")}
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                </ScrollReveal>
-              ))}
+                  </ScrollReveal>
+                );
+              })}
             </div>
           )}
 
-          <p className="text-xs text-muted-foreground text-center mt-8">* Preços são referência e podem variar conforme temporada. Nenhum quarto possui cofre.</p>
+          <p className="text-xs text-muted-foreground text-center mt-8">{t("quartos.disclaimer")}</p>
         </div>
       </section>
 
-      {/* Gallery - all room images */}
       {allImages.length > 0 && (
         <section className="py-16 bg-warm">
           <div className="container">
             <ScrollReveal>
-              <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">Galeria de Fotos</h2>
+              <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">{t("quartos.galeriaTitle")}</h2>
             </ScrollReveal>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
               {allImages.map((img, i) => (

@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import Layout from "@/components/Layout";
 import { Phone, Mail, MapPin, Instagram, Send } from "lucide-react";
 import { ReviewsCarousel } from "@/components/ReviewsSection";
@@ -6,40 +7,19 @@ import { WHATSAPP_URL } from "@/lib/constants";
 import { ScrollReveal } from "@/hooks/useScrollReveal";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 
-const faqData = [
-  {
-    q: "O Gaivota Hotel oferece condições especiais para empresas e hospedagem de funcionários?",
-    a: "Sim, o Gaivota Hotel possui condições diferenciadas e flexíveis para hospedagem corporativa e faturamento para empresas que desejam acomodar seus funcionários em Eldorado dos Carajás. Entre em contato para mais detalhes sobre nossas soluções para empresas de diversos setores e necessidades de hospedagem.",
-  },
-  {
-    q: "O hotel está preparado para receber hóspedes a trabalho, como empresários e executivos?",
-    a: "Absolutamente. Nossas acomodações são projetadas para oferecer o máximo de conforto e funcionalidade para executivos e empresários, com Wi-Fi de alta velocidade, ambientes climatizados e mesa de trabalho, garantindo uma estadia produtiva e relaxante.",
-  },
-  {
-    q: "Qual a localização do Gaivota Hotel em relação às principais empresas e áreas de negócio em Eldorado dos Carajás?",
-    a: "Estamos estrategicamente localizados no centro de Eldorado dos Carajás, com fácil acesso às principais vias e áreas de interesse comercial e industrial, ideal para quem busca hotel próximo a grandes empresas e centros de negócio na região.",
-  },
-  {
-    q: "O café da manhã está incluído na diária e atende às necessidades de quem precisa começar o dia cedo para o trabalho?",
-    a: "Sim, nosso delicioso café da manhã buffet com opções regionais está sempre incluído na diária. Servimos um desjejum completo e reforçado, perfeito para garantir a energia necessária para um dia de trabalho intenso.",
-  },
-  {
-    q: "O hotel oferece estacionamento seguro para veículos de empresas?",
-    a: "Sim, dispomos de um amplo estacionamento coberto e seguro com capacidade para 30 carros, proporcionando tranquilidade para hóspedes que viajam com veículos próprios ou da empresa.",
-  },
-  {
-    q: "Como posso solicitar um orçamento ou fazer uma reserva para um grupo de funcionários da minha empresa?",
-    a: "Para orçamentos e reservas corporativas, por favor, entre em contato diretamente pelo telefone (94) 99285-4456 ou pelo nosso formulário de contato. Nossa equipe está pronta para oferecer a melhor solução para a sua empresa.",
-  },
-];
-
 const Contatos = () => {
+  const { t } = useTranslation();
   const [form, setForm] = useState({ nome: "", email: "", telefone: "", mensagem: "" });
+
+  const faqData = Array.from({ length: 6 }, (_, i) => ({
+    q: t(`faq.q${i + 1}`),
+    a: t(`faq.a${i + 1}`),
+  }));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const msg = encodeURIComponent(
-      `Vim do site, gostaria de fazer uma reserva direta!\n\nSou ${form.nome}.\nEmail: ${form.email}\nTelefone: ${form.telefone}\n\n${form.mensagem}`
+      t("contatos.whatsappMsg", { nome: form.nome, email: form.email, telefone: form.telefone, mensagem: form.mensagem })
     );
     window.open(`https://wa.me/5594992854456?text=${msg}`, "_blank");
   };
@@ -49,9 +29,9 @@ const Contatos = () => {
       <section className="relative h-[40vh] min-h-[250px] flex items-center justify-center bg-foreground">
         <div className="relative z-10 text-center px-4">
           <h1 className="font-display text-4xl md:text-5xl font-bold text-white text-shadow-hero mb-3 animate-fade-in-up">
-            Fale Conosco
+            {t("contatos.heroTitle")}
           </h1>
-          <p className="text-white/85 text-lg animate-fade-in-up" style={{ animationDelay: "0.2s" }}>Estamos prontos para atendê-lo</p>
+          <p className="text-white/85 text-lg animate-fade-in-up" style={{ animationDelay: "0.2s" }}>{t("contatos.heroSubtitle")}</p>
         </div>
       </section>
 
@@ -59,14 +39,14 @@ const Contatos = () => {
         <div className="container">
           <div className="grid md:grid-cols-2 gap-12">
             <ScrollReveal direction="left">
-              <h2 className="font-display text-2xl font-bold mb-6">Informações de Contato</h2>
+              <h2 className="font-display text-2xl font-bold mb-6">{t("contatos.infoTitle")}</h2>
               <div className="space-y-5">
                 <a href="tel:+5594992854456" className="flex items-center gap-4 group">
                   <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
                     <Phone className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Reservas (WhatsApp)</p>
+                    <p className="text-sm text-muted-foreground">{t("contatos.reservasWhatsapp")}</p>
                     <p className="font-semibold">(94) 99285-4456</p>
                   </div>
                 </a>
@@ -75,7 +55,7 @@ const Contatos = () => {
                     <Mail className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">E-mail</p>
+                    <p className="text-sm text-muted-foreground">{t("contatos.email")}</p>
                     <p className="font-semibold">gaivotahotelpara@gmail.com</p>
                   </div>
                 </a>
@@ -84,7 +64,7 @@ const Contatos = () => {
                     <MapPin className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Endereço</p>
+                    <p className="text-sm text-muted-foreground">{t("contatos.endereco")}</p>
                     <p className="font-semibold">Av. São Geraldo n. 4, Centro</p>
                     <p className="text-sm text-muted-foreground">Eldorado dos Carajás, PA — CEP 68524-000</p>
                   </div>
@@ -99,7 +79,7 @@ const Contatos = () => {
                     <Instagram className="w-5 h-5 text-primary" />
                   </div>
                   <div>
-                    <p className="text-sm text-muted-foreground">Instagram</p>
+                    <p className="text-sm text-muted-foreground">{t("contatos.instagram")}</p>
                     <p className="font-semibold">@gaivotahotel_eldorado</p>
                   </div>
                 </a>
@@ -107,45 +87,15 @@ const Contatos = () => {
             </ScrollReveal>
 
             <ScrollReveal direction="right">
-              <h2 className="font-display text-2xl font-bold mb-6">Envie uma Mensagem</h2>
+              <h2 className="font-display text-2xl font-bold mb-6">{t("contatos.enviarTitle")}</h2>
               <form onSubmit={handleSubmit} className="space-y-4">
-                <input
-                  type="text"
-                  placeholder="Seu nome"
-                  required
-                  value={form.nome}
-                  onChange={(e) => setForm({ ...form, nome: e.target.value })}
-                  className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
-                />
-                <input
-                  type="email"
-                  placeholder="Seu e-mail"
-                  required
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
-                />
-                <input
-                  type="tel"
-                  placeholder="Seu telefone"
-                  value={form.telefone}
-                  onChange={(e) => setForm({ ...form, telefone: e.target.value })}
-                  className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow"
-                />
-                <textarea
-                  placeholder="Sua mensagem"
-                  rows={4}
-                  required
-                  value={form.mensagem}
-                  onChange={(e) => setForm({ ...form, mensagem: e.target.value })}
-                  className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none transition-shadow"
-                />
-                <button
-                  type="submit"
-                  className="cta-pulse flex items-center justify-center gap-2 w-full bg-primary text-primary-foreground py-3 rounded-md font-semibold"
-                >
+                <input type="text" placeholder={t("contatos.placeholderNome")} required value={form.nome} onChange={(e) => setForm({ ...form, nome: e.target.value })} className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow" />
+                <input type="email" placeholder={t("contatos.placeholderEmail")} required value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow" />
+                <input type="tel" placeholder={t("contatos.placeholderTelefone")} value={form.telefone} onChange={(e) => setForm({ ...form, telefone: e.target.value })} className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 transition-shadow" />
+                <textarea placeholder={t("contatos.placeholderMensagem")} rows={4} required value={form.mensagem} onChange={(e) => setForm({ ...form, mensagem: e.target.value })} className="w-full px-4 py-3 rounded-md border bg-card text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/50 resize-none transition-shadow" />
+                <button type="submit" className="cta-pulse flex items-center justify-center gap-2 w-full bg-primary text-primary-foreground py-3 rounded-md font-semibold">
                   <Send className="w-4 h-4" />
-                  Enviar via WhatsApp
+                  {t("contatos.enviarBtn")}
                 </button>
               </form>
             </ScrollReveal>
@@ -159,7 +109,7 @@ const Contatos = () => {
       <section className="py-16 bg-muted/30">
         <div className="container max-w-3xl">
           <ScrollReveal>
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-8">Perguntas Frequentes</h2>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-8">{t("faq.title")}</h2>
           </ScrollReveal>
           <ScrollReveal>
             <Accordion type="single" collapsible className="space-y-3">

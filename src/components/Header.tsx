@@ -1,20 +1,23 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { WHATSAPP_URL } from "@/lib/constants";
 import { Menu, X, Phone } from "lucide-react";
 import logoGaivota from "@/assets/logo-gaivota.png";
-
-const navItems = [
-  { label: "Home", path: "/" },
-  { label: "Quartos", path: "/quartos" },
-  { label: "Estrutura", path: "/estrutura" },
-  { label: "Contatos", path: "/contatos" },
-  { label: "Política", path: "/politica-e-privacidade-de-reservas" },
-];
+import LanguageSwitcher from "./LanguageSwitcher";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const { t } = useTranslation();
+
+  const navItems = [
+    { label: t("nav.home"), path: "/" },
+    { label: t("nav.quartos"), path: "/quartos" },
+    { label: t("nav.estrutura"), path: "/estrutura" },
+    { label: t("nav.contatos"), path: "/contatos" },
+    { label: t("nav.politica"), path: "/politica-e-privacidade-de-reservas" },
+  ];
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 bg-foreground/95 backdrop-blur-sm">
@@ -36,6 +39,7 @@ const Header = () => {
               {item.label}
             </Link>
           ))}
+          <LanguageSwitcher />
           <a
             href={WHATSAPP_URL}
             target="_blank"
@@ -43,14 +47,17 @@ const Header = () => {
             className="cta-pulse flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-semibold"
           >
             <Phone className="w-4 h-4" />
-            Reservar
+            {t("nav.reservar")}
           </a>
         </nav>
 
         {/* Mobile toggle */}
-        <button onClick={() => setIsOpen(!isOpen)} className="md:hidden text-primary-foreground">
-          {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
-        </button>
+        <div className="flex items-center gap-3 md:hidden">
+          <LanguageSwitcher />
+          <button onClick={() => setIsOpen(!isOpen)} className="text-primary-foreground">
+            {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </div>
       </div>
 
       {/* Mobile nav */}
@@ -76,7 +83,7 @@ const Header = () => {
               className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-3 rounded-md text-sm font-semibold"
             >
               <Phone className="w-4 h-4" />
-              Reservar Agora
+              {t("nav.reservarAgora")}
             </a>
           </div>
         </nav>
