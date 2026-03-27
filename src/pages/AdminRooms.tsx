@@ -80,7 +80,16 @@ const AdminRooms = () => {
 
   const handleDelete = async (id: string) => {
     if (!confirm("Tem certeza que deseja excluir este quarto?")) return;
-    await supabase.from("rooms").delete().eq("id", id);
+    // Delete storage files for this room's images first
+    const roomImages = images[id] || [];
+    for (const img of roomImages) {
+      const path = img.image_url.split("/hotel-images/")[1];
+      if (path) {
+        await supabase.storage.from("hotel-images").remove([decodeURIComponent(path)]);
+      }
+    }
+    const { error } = await supabase.from("rooms").delete().eq("id", id);
+    if (error) { toast.error("Erro ao excluir: " + error.message); return; }
     toast.success("Quarto excluído!");
     load();
   };
@@ -101,7 +110,17 @@ const AdminRooms = () => {
   };
 
   const handleDeleteImage = async (imgId: string) => {
-    await supabase.from("room_images").delete().eq("id", imgId);
+    // Find the image to get storage path
+    const allImgs = Object.values(images).flat();
+    const img = allImgs.find((i) => i.id === imgId);
+    if (img) {
+      const path = img.image_url.split("/hotel-images/")[1];
+      if (path) {
+        await supabase.storage.from("hotel-images").remove([decodeURIComponent(path)]);
+      }
+    }
+    const { error } = await supabase.from("room_images").delete().eq("id", imgId);
+    if (error) { toast.error("Erro ao remover imagem: " + error.message); return; }
     toast.success("Imagem removida!");
     load();
   };
