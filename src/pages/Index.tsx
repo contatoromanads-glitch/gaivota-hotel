@@ -6,12 +6,12 @@ import { ReviewsFull } from "@/components/ReviewsSection";
 import { GalleryProvider, ClickableImage } from "@/components/GalleryProvider";
 import { WHATSAPP_URL } from "@/lib/constants";
 import { ScrollReveal } from "@/hooks/useScrollReveal";
-import hotelFachada from "@/assets/hotel-fachada2.jpeg";
-import hotelLobby from "@/assets/hotel-lobby.jpeg";
-import hotelCafeManha2 from "@/assets/hotel-cafe-manha2.jpeg";
-import hotelQuarto from "@/assets/hotel-quarto.jpeg";
-import hotelCafeArea from "@/assets/hotel-cafe-area.jpeg";
-import hotelMataAtlantica from "@/assets/hotel-mata-atlantica.jpeg";
+import hotelFachada from "@/assets/hotel-fachada.png";
+import hotelLobby from "@/assets/hotel-lobby.png";
+import hotelCafeManha2 from "@/assets/hotel-cafe-manha.png";
+import hotelQuarto from "@/assets/hotel-quarto.png";
+import hotelCafeArea from "@/assets/hotel-cafe-area.png";
+import hotelMataAtlantica from "@/assets/hotel-mata-atlantica.png";
 
 const allImages = [
   { src: hotelFachada, alt: "Fachada do Gaivota Hotel" },
