@@ -7,7 +7,7 @@ import { ScrollReveal } from "@/hooks/useScrollReveal";
 import ImageLightbox from "@/components/ImageLightbox";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslatedContent } from "@/hooks/useTranslatedContent";
-import hotelCorredor from "@/assets/hotel-corredor.jpeg";
+import hotelCorredor from "@/assets/hotel-corredor.png";
 
 interface Room {
   id: string;
