@@ -16,6 +16,7 @@ import hotelHallAmazonia from "@/assets/hotel-hall-amazonia.png";
 import hotelRestaurante2 from "@/assets/hotel-restaurante2.png";
 import hotelMataAtlantica from "@/assets/hotel-mata-atlantica.png";
 import hotelFachada2 from "@/assets/hotel-fachada2.png";
+import hotelGalleryNew from "@/assets/hotel-gallery-new.png";
 
 const galleryImages = [
   { src: hotelFachada2, alt: "Fachada do Hotel" },
@@ -25,6 +26,7 @@ const galleryImages = [
   { src: hotelMataAtlantica, alt: "Decoração Mata Atlântica" },
   { src: hotelRestaurante2, alt: "Restaurante" },
   { src: hotelEscada, alt: "Escadaria" },
+  { src: hotelGalleryNew, alt: "Hotel" },
 ];
 
 const Estrutura = () => {
