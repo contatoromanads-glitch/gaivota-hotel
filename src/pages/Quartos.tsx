@@ -167,7 +167,7 @@ const Quartos = () => {
                             </li>
                           ))}
                         </ul>
-                        <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="cta-pulse mt-5 block text-center bg-primary text-primary-foreground py-2.5 rounded-md text-sm font-semibold">
+                        <a href={`https://wa.me/5594992854456?text=${encodeURIComponent(`Olá! Vim do site e gostaria de fazer uma reserva para o quarto ${room.name}. Poderia me ajudar?`)}`} target="_blank" rel="noopener noreferrer" className="cta-pulse mt-5 block text-center bg-primary text-primary-foreground py-2.5 rounded-md text-sm font-semibold">
                           {t("quartos.reservar")}
                         </a>
                       </div>
