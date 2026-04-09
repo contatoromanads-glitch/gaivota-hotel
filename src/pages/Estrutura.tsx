@@ -8,14 +8,14 @@ import {
   Building2, Car, Wifi, ConciergeBell, Coffee, Clock, Sun, WashingMachine,
   UtensilsCrossed, ShoppingCart, MapPin, TreePine, Landmark
 } from "lucide-react";
-import hotelRecepcao from "@/assets/hotel-recepcao.jpeg";
-import hotelCafeArea from "@/assets/hotel-cafe-area.jpeg";
+import hotelRecepcao from "@/assets/hotel-recepcao.png";
+import hotelCafeArea from "@/assets/hotel-cafe-area.png";
 import hotelLobby from "@/assets/hotel-lobby.jpeg";
-import hotelEscada from "@/assets/hotel-escada.jpeg";
-import hotelHallAmazonia from "@/assets/hotel-hall-amazonia.jpeg";
-import hotelRestaurante2 from "@/assets/hotel-restaurante2.jpeg";
-import hotelMataAtlantica from "@/assets/hotel-mata-atlantica.jpeg";
-import hotelFachada2 from "@/assets/hotel-fachada2.jpeg";
+import hotelEscada from "@/assets/hotel-escada.png";
+import hotelHallAmazonia from "@/assets/hotel-hall-amazonia.png";
+import hotelRestaurante2 from "@/assets/hotel-restaurante2.png";
+import hotelMataAtlantica from "@/assets/hotel-mata-atlantica.png";
+import hotelFachada2 from "@/assets/hotel-fachada2.png";
 
 const galleryImages = [
   { src: hotelFachada2, alt: "Fachada do Hotel" },
