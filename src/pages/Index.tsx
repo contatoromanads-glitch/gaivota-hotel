@@ -138,6 +138,9 @@ const Index = () => {
       {/* Reviews */}
       <ReviewsFull />
 
+      {/* History */}
+      <HistorySection />
+
       {/* CTA */}
       <section className="py-20 bg-secondary text-secondary-foreground text-center">
         <div className="container">
