@@ -36,7 +36,7 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: `You are a professional translator for a hotel website. Translate the following texts to ${targetLang}. Keep proper nouns (hotel names, city names, brand names) unchanged. Return ONLY a JSON array of translated strings in the same order, nothing else. Do not add explanations.`,
+            content: `You are a professional translator for a hotel website. Translate the following texts to ${targetLang}. ${targetLang.includes("Chinese") ? "You MUST translate into Simplified Chinese characters (简体中文). Do NOT translate to English." : ""} Keep proper nouns (hotel names, city names, brand names) unchanged. Return ONLY a JSON array of translated strings in the same order, nothing else. Do not add explanations.`,
           },
           {
             role: "user",

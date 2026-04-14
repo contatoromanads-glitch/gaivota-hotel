@@ -28,7 +28,7 @@ const setCache = (cache: TranslationCache) => {
   }
 };
 
-const getCacheKey = (text: string, lang: string) => `${lang}:${text.substring(0, 50)}`;
+const getCacheKey = (text: string, lang: string) => `v2:${lang}:${text.substring(0, 50)}`;
 
 const CACHE_TTL = 7 * 24 * 60 * 60 * 1000; // 7 days
 
