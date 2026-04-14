@@ -6,6 +6,7 @@ import { ReviewsFull } from "@/components/ReviewsSection";
 import { GalleryProvider, ClickableImage } from "@/components/GalleryProvider";
 import { WHATSAPP_URL } from "@/lib/constants";
 import { ScrollReveal } from "@/hooks/useScrollReveal";
+import HistorySection from "@/components/HistorySection";
 import hotelFachada from "@/assets/hotel-fachada.png";
 import hotelLobby from "@/assets/hotel-lobby.png";
 import hotelCafeManha2 from "@/assets/hotel-cafe-manha.png";
