@@ -4,7 +4,7 @@ import LanguageDetector from "i18next-browser-languagedetector";
 import pt from "./locales/pt.json";
 import en from "./locales/en.json";
 import es from "./locales/es.json";
-
+import zh from "./locales/zh.json";
 i18n
   .use(LanguageDetector)
   .use(initReactI18next)
@@ -13,6 +13,7 @@ i18n
       pt: { translation: pt },
       en: { translation: en },
       es: { translation: es },
+      zh: { translation: zh },
     },
     fallbackLng: "pt",
     interpolation: { escapeValue: false },

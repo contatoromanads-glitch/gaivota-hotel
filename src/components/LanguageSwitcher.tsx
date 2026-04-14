@@ -2,11 +2,13 @@ import { useTranslation } from "react-i18next";
 import flagBR from "@/assets/flag-br.png";
 import flagUS from "@/assets/flag-us.png";
 import flagES from "@/assets/flag-es.png";
+import flagCN from "@/assets/flag-cn.png";
 
 const languages = [
   { code: "pt", flag: flagBR, label: "Português" },
   { code: "en", flag: flagUS, label: "English" },
   { code: "es", flag: flagES, label: "Español" },
+  { code: "zh", flag: flagCN, label: "中文" },
 ];
 
 const LanguageSwitcher = () => {
