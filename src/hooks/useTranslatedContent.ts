@@ -70,7 +70,7 @@ export const useTranslatedContent = (texts: string[]): string[] => {
       const { data, error } = await supabase.functions.invoke("translate", {
         body: {
           texts: toTranslate.map((t) => t.text),
-          targetLang: lang === "en" ? "English" : "Spanish",
+          targetLang: lang === "en" ? "English" : lang === "zh" ? "Chinese (Mandarin)" : "Spanish",
         },
       });
 
