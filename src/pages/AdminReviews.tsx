@@ -53,25 +53,38 @@ const AdminReviews = () => {
     setEditing(null); setIsNew(false); load();
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Excluir esta avaliação?")) return;
-    await supabase.from("reviews").delete().eq("id", id);
-    toast.success("Excluída!"); load();
+  const handleDelete = async (review: Review) => {
+    if (!confirm(`Excluir a avaliação de ${review.guest_name}?\n\nEla será removida permanentemente do site. Se quiser apenas escondê-la, use o botão de olho (👁).`)) return;
+    setReviews((prev) => prev.filter((r) => r.id !== review.id));
+    const { error } = await supabase.from("reviews").delete().eq("id", review.id);
+    if (error) { toast.error(error.message); load(); return; }
+    toast.success("Avaliação removida do site.");
   };
 
   const toggleVisibility = async (review: Review) => {
+    setReviews((prev) => prev.map((r) => r.id === review.id ? { ...r, is_visible: !r.is_visible } : r));
     await supabase.from("reviews").update({ is_visible: !review.is_visible }).eq("id", review.id);
-    load();
+    toast.success(review.is_visible ? "Avaliação oculta do site." : "Avaliação publicada no site.");
   };
 
   return (
     <AdminLayout>
       <div className="max-w-4xl mx-auto">
-        <div className="flex items-center justify-between mb-6">
-          <h2 className="font-display text-2xl font-bold">Gerenciar Avaliações</h2>
-          <button onClick={() => { setEditing(emptyReview()); setIsNew(true); }} className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-semibold">
-            <Plus className="w-4 h-4" /> Nova Avaliação
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-4 gap-3">
+          <div>
+            <h2 className="font-display text-2xl font-bold">Avaliações de Hóspedes</h2>
+            <p className="text-sm text-muted-foreground mt-1">
+              Adicione depoimentos reais de hóspedes para mostrar no site.
+            </p>
+          </div>
+          <button onClick={() => { setEditing(emptyReview()); setIsNew(true); }} className="flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2.5 rounded-lg text-sm font-semibold hover:opacity-90 shadow-sm">
+            <Plus className="w-4 h-4" /> Nova avaliação
           </button>
+        </div>
+
+        <div className="bg-primary/5 border border-primary/20 rounded-xl p-4 mb-6 text-sm text-foreground/80">
+          <strong>Dica:</strong> use o ícone <Eye className="inline w-3.5 h-3.5 mx-0.5" /> para esconder uma avaliação
+          temporariamente, ou a lixeira <Trash2 className="inline w-3.5 h-3.5 mx-0.5" /> para apagar de vez.
         </div>
 
         {editing && (
@@ -148,7 +161,7 @@ const AdminReviews = () => {
                   <button onClick={() => { setEditing(r); setIsNew(false); }} className="p-2 rounded-lg hover:bg-muted">
                     <Pencil className="w-4 h-4" />
                   </button>
-                  <button onClick={() => handleDelete(r.id)} className="p-2 rounded-lg hover:bg-destructive/10 text-destructive">
+                  <button onClick={() => handleDelete(r)} className="p-2 rounded-lg hover:bg-destructive/10 text-destructive" title="Excluir">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>

@@ -8,12 +8,12 @@ import {
 import logoGaivota from "@/assets/logo-gaivota.png";
 
 const navItems = [
-  { label: "Dashboard", path: "/admin", icon: LayoutDashboard },
-  { label: "Quartos", path: "/admin/quartos", icon: BedDouble },
-  { label: "Avaliações", path: "/admin/avaliacoes", icon: Star },
-  { label: "Banners", path: "/admin/banners", icon: Image },
-  { label: "Contatos", path: "/admin/contatos", icon: Settings },
-  { label: "Conteúdo", path: "/admin/conteudo", icon: FileText },
+  { label: "Início", path: "/admin", icon: LayoutDashboard, hint: "Visão geral" },
+  { label: "Quartos", path: "/admin/quartos", icon: BedDouble, hint: "Editar quartos e fotos" },
+  { label: "Banners", path: "/admin/banners", icon: Image, hint: "Imagens de topo" },
+  { label: "Avaliações", path: "/admin/avaliacoes", icon: Star, hint: "Depoimentos de hóspedes" },
+  { label: "Textos do site", path: "/admin/conteudo", icon: FileText, hint: "Editar conteúdo" },
+  { label: "Contatos", path: "/admin/contatos", icon: Settings, hint: "Telefone, e-mail, endereço" },
 ];
 
 const AdminLayout = ({ children }: { children: ReactNode }) => {
@@ -42,7 +42,7 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
             </button>
           </div>
 
-          <nav className="flex-1 p-3 space-y-1">
+          <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
             {navItems.map((item) => {
               const active = location.pathname === item.path;
               return (
@@ -50,13 +50,18 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
                   key={item.path}
                   to={item.path}
                   onClick={() => setSidebarOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex items-start gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                 >
-                  <item.icon className="w-4 h-4" />
-                  {item.label}
-                  {active && <ChevronRight className="w-4 h-4 ml-auto" />}
+                  <item.icon className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <div>{item.label}</div>
+                    <div className={`text-[10px] font-normal leading-tight ${active ? "text-primary-foreground/80" : "text-muted-foreground/70"}`}>
+                      {item.hint}
+                    </div>
+                  </div>
+                  {active && <ChevronRight className="w-4 h-4 mt-0.5 flex-shrink-0" />}
                 </Link>
               );
             })}
