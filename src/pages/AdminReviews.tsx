@@ -151,7 +151,7 @@ const AdminReviews = () => {
                   <button onClick={() => { setEditing(r); setIsNew(false); }} className="p-2 rounded-lg hover:bg-muted">
                     <Pencil className="w-4 h-4" />
                   </button>
-                  <button onClick={() => handleDelete(r.id)} className="p-2 rounded-lg hover:bg-destructive/10 text-destructive">
+                  <button onClick={() => handleDelete(r)} className="p-2 rounded-lg hover:bg-destructive/10 text-destructive" title="Excluir">
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
