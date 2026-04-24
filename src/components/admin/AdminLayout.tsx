@@ -8,12 +8,12 @@ import {
 import logoGaivota from "@/assets/logo-gaivota.png";
 
 const navItems = [
-  { label: "Dashboard", path: "/admin", icon: LayoutDashboard },
-  { label: "Quartos", path: "/admin/quartos", icon: BedDouble },
-  { label: "Avaliações", path: "/admin/avaliacoes", icon: Star },
-  { label: "Banners", path: "/admin/banners", icon: Image },
-  { label: "Contatos", path: "/admin/contatos", icon: Settings },
-  { label: "Conteúdo", path: "/admin/conteudo", icon: FileText },
+  { label: "Início", path: "/admin", icon: LayoutDashboard, hint: "Visão geral" },
+  { label: "Quartos", path: "/admin/quartos", icon: BedDouble, hint: "Editar quartos e fotos" },
+  { label: "Banners", path: "/admin/banners", icon: Image, hint: "Imagens de topo" },
+  { label: "Avaliações", path: "/admin/avaliacoes", icon: Star, hint: "Depoimentos de hóspedes" },
+  { label: "Textos do site", path: "/admin/conteudo", icon: FileText, hint: "Editar conteúdo" },
+  { label: "Contatos", path: "/admin/contatos", icon: Settings, hint: "Telefone, e-mail, endereço" },
 ];
 
 const AdminLayout = ({ children }: { children: ReactNode }) => {
