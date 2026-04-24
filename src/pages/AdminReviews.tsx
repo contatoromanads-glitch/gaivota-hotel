@@ -53,15 +53,18 @@ const AdminReviews = () => {
     setEditing(null); setIsNew(false); load();
   };
 
-  const handleDelete = async (id: string) => {
-    if (!confirm("Excluir esta avaliação?")) return;
-    await supabase.from("reviews").delete().eq("id", id);
-    toast.success("Excluída!"); load();
+  const handleDelete = async (review: Review) => {
+    if (!confirm(`Excluir a avaliação de ${review.guest_name}?\n\nEla será removida permanentemente do site. Se quiser apenas escondê-la, use o botão de olho (👁).`)) return;
+    setReviews((prev) => prev.filter((r) => r.id !== review.id));
+    const { error } = await supabase.from("reviews").delete().eq("id", review.id);
+    if (error) { toast.error(error.message); load(); return; }
+    toast.success("Avaliação removida do site.");
   };
 
   const toggleVisibility = async (review: Review) => {
+    setReviews((prev) => prev.map((r) => r.id === review.id ? { ...r, is_visible: !r.is_visible } : r));
     await supabase.from("reviews").update({ is_visible: !review.is_visible }).eq("id", review.id);
-    load();
+    toast.success(review.is_visible ? "Avaliação oculta do site." : "Avaliação publicada no site.");
   };
 
   return (
