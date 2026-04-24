@@ -8,8 +8,8 @@ const corsHeaders = {
 // Lista de credenciais oficiais do painel administrativo.
 // Todas terão papel "admin" garantido e senha redefinida em cada execução.
 const ADMIN_CREDENTIALS: { email: string; password: string }[] = [
-  { email: "contato@gaivotahotelpara.com.br", password: "gaivota2015*" },
   { email: "gaivotahotelpara@gmail.com", password: "gaivota2015*" },
+  { email: "contato@gaivotahotelpara.com.br", password: "gaivota2015*" },
 ];
 
 Deno.serve(async (req) => {
