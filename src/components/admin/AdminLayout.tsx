@@ -42,7 +42,7 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
             </button>
           </div>
 
-          <nav className="flex-1 p-3 space-y-1">
+          <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
             {navItems.map((item) => {
               const active = location.pathname === item.path;
               return (
@@ -50,13 +50,18 @@ const AdminLayout = ({ children }: { children: ReactNode }) => {
                   key={item.path}
                   to={item.path}
                   onClick={() => setSidebarOpen(false)}
-                  className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                  className={`flex items-start gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                     active ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                 >
-                  <item.icon className="w-4 h-4" />
-                  {item.label}
-                  {active && <ChevronRight className="w-4 h-4 ml-auto" />}
+                  <item.icon className="w-4 h-4 mt-0.5 flex-shrink-0" />
+                  <div className="flex-1 min-w-0">
+                    <div>{item.label}</div>
+                    <div className={`text-[10px] font-normal leading-tight ${active ? "text-primary-foreground/80" : "text-muted-foreground/70"}`}>
+                      {item.hint}
+                    </div>
+                  </div>
+                  {active && <ChevronRight className="w-4 h-4 mt-0.5 flex-shrink-0" />}
                 </Link>
               );
             })}
