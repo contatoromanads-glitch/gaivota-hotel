@@ -6,6 +6,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/hooks/useAuth";
 import Index from "./pages/Index";
 import Quartos from "./pages/Quartos";
+import QuartoDetalhe from "./pages/QuartoDetalhe";
 import Estrutura from "./pages/Estrutura";
 import Contatos from "./pages/Contatos";
 import Politica from "./pages/Politica";
@@ -17,6 +18,7 @@ import AdminReviews from "./pages/AdminReviews";
 import AdminBanners from "./pages/AdminBanners";
 import AdminContacts from "./pages/AdminContacts";
 import AdminContent from "./pages/AdminContent";
+import AdminPolitica from "./pages/AdminPolitica";
 
 const queryClient = new QueryClient();
 
@@ -38,6 +40,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/home" element={<Index />} />
             <Route path="/quartos" element={<Quartos />} />
+            <Route path="/quartos/:id" element={<QuartoDetalhe />} />
             <Route path="/estrutura" element={<Estrutura />} />
             <Route path="/contatos" element={<Contatos />} />
             <Route path="/politica-e-privacidade-de-reservas" element={<Politica />} />
@@ -48,6 +51,7 @@ const App = () => (
             <Route path="/admin/banners" element={<ProtectedRoute><AdminBanners /></ProtectedRoute>} />
             <Route path="/admin/contatos" element={<ProtectedRoute><AdminContacts /></ProtectedRoute>} />
             <Route path="/admin/conteudo" element={<ProtectedRoute><AdminContent /></ProtectedRoute>} />
+            <Route path="/admin/politica" element={<ProtectedRoute><AdminPolitica /></ProtectedRoute>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
