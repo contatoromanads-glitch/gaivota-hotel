@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Layout from "@/components/Layout";
 import { ReviewsCarousel } from "@/components/ReviewsSection";
@@ -9,6 +10,12 @@ import { supabase } from "@/integrations/supabase/client";
 import { useTranslatedContent } from "@/hooks/useTranslatedContent";
 import hotelCorredor from "@/assets/hotel-corredor.png";
 
+interface Banner {
+  image_url: string;
+  title: string | null;
+  subtitle: string | null;
+}
+
 interface Room {
   id: string;
   name: string;
@@ -18,6 +25,8 @@ interface Room {
   amenities: string[];
   highlight: boolean | null;
   display_order: number | null;
+  price: number | null;
+  show_price: boolean;
 }
 
 interface RoomImage {
@@ -28,12 +37,16 @@ interface RoomImage {
   display_order: number | null;
 }
 
+const formatPrice = (price: number) =>
+  new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(price);
+
 const Quartos = () => {
   const { t } = useTranslation();
   const [rooms, setRooms] = useState<Room[]>([]);
   const [roomImages, setRoomImages] = useState<Record<string, RoomImage[]>>({});
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+  const [banner, setBanner] = useState<Banner | null>(null);
 
   // Collect all translatable texts from rooms
   const roomTexts = rooms.flatMap((r) => [r.name, r.beds, r.description || "", ...(r.amenities || [])]);
@@ -53,13 +66,21 @@ const Quartos = () => {
   };
 
   const loadData = async () => {
-    const [roomsRes, imagesRes] = await Promise.all([
+    const [roomsRes, imagesRes, bannerRes] = await Promise.all([
       supabase.from("rooms").select("*").order("display_order"),
       supabase.from("room_images").select("*").order("display_order"),
+      supabase.from("banners").select("image_url,title,subtitle").eq("page", "quartos").eq("is_active", true).maybeSingle(),
     ]);
 
     if (roomsRes.data) {
-      setRooms(roomsRes.data.map((r) => ({ ...r, amenities: (r.amenities as string[]) || [] })));
+      setRooms(
+        roomsRes.data.map((r) => ({
+          ...r,
+          amenities: (r.amenities as string[]) || [],
+          price: r.price ?? null,
+          show_price: r.show_price ?? true,
+        }))
+      );
     }
     if (imagesRes.data) {
       const grouped: Record<string, RoomImage[]> = {};
@@ -69,6 +90,7 @@ const Quartos = () => {
       });
       setRoomImages(grouped);
     }
+    if (bannerRes.data) setBanner(bannerRes.data);
     setLoading(false);
   };
 
@@ -106,11 +128,19 @@ const Quartos = () => {
   return (
     <Layout>
       <section className="relative h-[50vh] min-h-[300px] flex items-center justify-center overflow-hidden">
-        <img src={hotelCorredor} alt="Corredor do hotel" className="absolute inset-0 w-full h-full object-cover" />
+        <img
+          src={banner?.image_url || hotelCorredor}
+          alt={banner?.title || "Quartos do hotel"}
+          className="absolute inset-0 w-full h-full object-cover"
+        />
         <div className="absolute inset-0 bg-foreground/70" />
         <div className="relative z-10 text-center px-4">
-          <h1 className="font-display text-4xl md:text-5xl font-bold text-white text-shadow-hero mb-3 animate-fade-in-up">{t("quartos.heroTitle")}</h1>
-          <p className="text-white/85 text-lg max-w-xl mx-auto animate-fade-in-up" style={{ animationDelay: "0.2s" }}>{t("quartos.heroSubtitle")}</p>
+          <h1 className="font-display text-4xl md:text-5xl font-bold text-white text-shadow-hero mb-3 animate-fade-in-up">
+            {banner?.title || t("quartos.heroTitle")}
+          </h1>
+          <p className="text-white/85 text-lg max-w-xl mx-auto animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
+            {banner?.subtitle || t("quartos.heroSubtitle")}
+          </p>
         </div>
       </section>
 
@@ -147,19 +177,24 @@ const Quartos = () => {
                 const tr = getTranslatedRoom(i);
                 return (
                   <ScrollReveal key={room.id} delay={i * 0.08} direction="up">
-                    <div className={`rounded-lg border overflow-hidden transition-shadow hover:shadow-lg h-full ${room.highlight ? "border-primary bg-primary/5" : "bg-card"}`}>
+                    <div className={`rounded-lg border overflow-hidden transition-shadow hover:shadow-lg h-full flex flex-col ${room.highlight ? "border-primary bg-primary/5" : "bg-card"}`}>
                       <img
                         src={getRoomMainImage(room.id)}
                         alt={tr.name}
                         className="w-full h-52 object-cover cursor-pointer img-hover"
                         onClick={() => setLightboxIndex(getRoomLightboxIndex(room.id))}
                       />
-                      <div className="p-6">
+                      <div className="p-6 flex flex-col flex-1">
                         {room.highlight && <span className="text-xs font-bold uppercase tracking-widest text-primary mb-2 block">{t("quartos.destaque")}</span>}
                         <h3 className="font-display text-lg font-semibold mb-1">{tr.name}</h3>
                         <p className="text-sm text-muted-foreground mb-1">{tr.beds}</p>
-                        {room.size && <p className="text-sm text-accent font-medium mb-3">{room.size}</p>}
-                        <ul className="space-y-1 mt-3">
+                        {room.size && <p className="text-sm text-accent font-medium mb-1">{room.size}</p>}
+                        {room.show_price && room.price != null && (
+                          <p className="text-base font-bold text-primary mt-1 mb-1">
+                            {formatPrice(room.price)} <span className="text-xs font-normal text-muted-foreground">/ noite</span>
+                          </p>
+                        )}
+                        <ul className="space-y-1 mt-3 flex-1">
                           {tr.amenities.map((a, ai) => (
                             <li key={ai} className="text-sm text-muted-foreground flex items-center gap-2">
                               <span className="w-1.5 h-1.5 rounded-full bg-secondary shrink-0" />
@@ -167,9 +202,22 @@ const Quartos = () => {
                             </li>
                           ))}
                         </ul>
-                        <a href={`https://wa.me/5594992854456?text=${encodeURIComponent(`Olá! Vim do site e gostaria de fazer uma reserva para o quarto ${room.name}. Poderia me ajudar?`)}`} target="_blank" rel="noopener noreferrer" className="cta-pulse mt-5 block text-center bg-primary text-primary-foreground py-2.5 rounded-md text-sm font-semibold">
-                          {t("quartos.reservar")}
-                        </a>
+                        <div className="mt-5 flex flex-col gap-2">
+                          <Link
+                            to={`/quartos/${room.id}`}
+                            className="block text-center border border-primary text-primary py-2.5 rounded-md text-sm font-semibold hover:bg-primary hover:text-primary-foreground transition-colors"
+                          >
+                            Ver detalhes
+                          </Link>
+                          <a
+                            href={`https://wa.me/5594992854456?text=${encodeURIComponent(`Olá! Vim do site e gostaria de fazer uma reserva para o quarto ${room.name}. Poderia me ajudar?`)}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="cta-pulse block text-center bg-primary text-primary-foreground py-2.5 rounded-md text-sm font-semibold"
+                          >
+                            {t("quartos.reservar")}
+                          </a>
+                        </div>
                       </div>
                     </div>
                   </ScrollReveal>
