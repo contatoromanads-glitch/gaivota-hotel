@@ -77,8 +77,8 @@ const AdminReviews = () => {
     return () => { supabase.removeChannel(channel); };
   }, [load]);
 
-  const approved = reviews.filter((r) => r.status === "approved");
-  const pending = reviews.filter((r) => r.status === "pending");
+  const approved = reviews.filter((r) => r.is_visible);
+  const pending = reviews.filter((r) => !r.is_visible);
   const displayed = activeTab === "approved" ? approved : pending;
 
   const handleSave = async () => {
@@ -90,7 +90,6 @@ const AdminReviews = () => {
       text: editing.text,
       is_visible: editing.is_visible ?? true,
       display_order: editing.display_order || 0,
-      status: editing.status || "approved",
     };
     if (isNew) {
       const { error } = await supabase.from("reviews").insert(payload);
