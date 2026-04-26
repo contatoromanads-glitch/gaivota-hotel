@@ -247,14 +247,12 @@ const AdminReviews = () => {
                     <p className="font-semibold text-sm">{r.guest_name}</p>
                     <span className="text-xs text-muted-foreground">{r.source}</span>
                     <div className="flex">{Array.from({ length: r.rating }).map((_, i) => (<Star key={i} className="w-3 h-3 fill-accent text-accent" />))}</div>
-                    {r.status === "pending" && <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-medium flex items-center gap-1"><Clock className="w-3 h-3" /> Pendente</span>}
-                    {r.status === "rejected" && <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium">Rejeitada</span>}
+                    {!r.is_visible && <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-medium flex items-center gap-1"><Clock className="w-3 h-3" /> Oculta</span>}
                   </div>
                   <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{r.text}</p>
                 </div>
                 <div className="flex gap-1 ml-2 flex-shrink-0">
-                  {r.status === "pending" && (
-                    <>
+                  <>
                       <button onClick={() => handleApprove(r)} className="p-2 rounded-lg hover:bg-green-50 text-green-600" title="Aprovar e publicar">
                         <CheckCircle className="w-4 h-4" />
                       </button>
