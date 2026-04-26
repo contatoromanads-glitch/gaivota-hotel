@@ -252,15 +252,6 @@ const AdminReviews = () => {
                   <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{r.text}</p>
                 </div>
                 <div className="flex gap-1 ml-2 flex-shrink-0">
-                  <>
-                      <button onClick={() => handleApprove(r)} className="p-2 rounded-lg hover:bg-green-50 text-green-600" title="Aprovar e publicar">
-                        <CheckCircle className="w-4 h-4" />
-                      </button>
-                      <button onClick={() => handleReject(r)} className="p-2 rounded-lg hover:bg-red-50 text-red-500" title="Rejeitar">
-                        <XCircle className="w-4 h-4" />
-                      </button>
-                    </>
-                  )}
                   <button onClick={() => toggleVisibility(r)} className="p-2 rounded-lg hover:bg-muted" title={r.is_visible ? "Ocultar" : "Mostrar"}>
                     {r.is_visible ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                   </button>
