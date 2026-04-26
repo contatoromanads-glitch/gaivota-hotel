@@ -12,11 +12,10 @@ interface Review {
   text: string;
   is_visible: boolean;
   display_order: number;
-  status: string;
 }
 
 const emptyReview = (): Partial<Review> => ({
-  guest_name: "", source: "Google", rating: 5, text: "", is_visible: true, display_order: 0, status: "approved",
+  guest_name: "", source: "Google", rating: 5, text: "", is_visible: true, display_order: 0,
 });
 
 const AdminReviews = () => {
@@ -28,7 +27,7 @@ const AdminReviews = () => {
 
   const load = useCallback(async () => {
     const { data } = await supabase.from("reviews").select("*").order("display_order");
-    if (data) setReviews(data.map((r) => ({ ...r, status: (r as any).status || "approved" })));
+    if (data) setReviews(data as Review[]);
   }, []);
 
   useEffect(() => {
@@ -120,14 +119,14 @@ const AdminReviews = () => {
   };
 
   const handleApprove = async (review: Review) => {
-    setReviews((prev) => prev.map((r) => r.id === review.id ? { ...r, status: "approved", is_visible: true } : r));
-    await supabase.from("reviews").update({ status: "approved", is_visible: true }).eq("id", review.id);
+    setReviews((prev) => prev.map((r) => r.id === review.id ? { ...r, is_visible: true } : r));
+    await supabase.from("reviews").update({ is_visible: true }).eq("id", review.id);
     toast.success("Avaliação aprovada e publicada no site!");
   };
 
   const handleReject = async (review: Review) => {
-    setReviews((prev) => prev.map((r) => r.id === review.id ? { ...r, status: "rejected", is_visible: false } : r));
-    await supabase.from("reviews").update({ status: "rejected", is_visible: false }).eq("id", review.id);
+    setReviews((prev) => prev.map((r) => r.id === review.id ? { ...r, is_visible: false } : r));
+    await supabase.from("reviews").update({ is_visible: false }).eq("id", review.id);
     toast.success("Avaliação rejeitada e ocultada do site.");
   };
 
