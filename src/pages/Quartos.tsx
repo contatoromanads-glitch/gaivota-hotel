@@ -1,13 +1,13 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import Layout from "@/components/Layout";
 import { ReviewsCarousel } from "@/components/ReviewsSection";
-import { WHATSAPP_URL } from "@/lib/constants";
 import { ScrollReveal } from "@/hooks/useScrollReveal";
 import ImageLightbox from "@/components/ImageLightbox";
 import { supabase } from "@/integrations/supabase/client";
 import { useTranslatedContent } from "@/hooks/useTranslatedContent";
+import { Search, X } from "lucide-react";
 import hotelCorredor from "@/assets/hotel-corredor.png";
 
 interface Banner {
@@ -47,12 +47,11 @@ const Quartos = () => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [banner, setBanner] = useState<Banner | null>(null);
+  const [search, setSearch] = useState("");
 
-  // Collect all translatable texts from rooms
   const roomTexts = rooms.flatMap((r) => [r.name, r.beds, r.description || "", ...(r.amenities || [])]);
   const translatedRoomTexts = useTranslatedContent(roomTexts);
 
-  // Helper to get translated text for a room
   const getTranslatedRoom = (roomIndex: number) => {
     const room = rooms[roomIndex];
     const amenityCount = rooms.slice(0, roomIndex).reduce((acc, r) => acc + (r.amenities?.length || 0), 0);
@@ -71,16 +70,13 @@ const Quartos = () => {
       supabase.from("room_images").select("*").order("display_order"),
       supabase.from("banners").select("image_url,title,subtitle").eq("page", "quartos").eq("is_active", true).maybeSingle(),
     ]);
-
     if (roomsRes.data) {
-      setRooms(
-        roomsRes.data.map((r) => ({
-          ...r,
-          amenities: (r.amenities as string[]) || [],
-          price: r.price ?? null,
-          show_price: r.show_price ?? true,
-        }))
-      );
+      setRooms(roomsRes.data.map((r) => ({
+        ...r,
+        amenities: (r.amenities as string[]) || [],
+        price: r.price ?? null,
+        show_price: r.show_price ?? true,
+      })));
     }
     if (imagesRes.data) {
       const grouped: Record<string, RoomImage[]> = {};
@@ -96,13 +92,25 @@ const Quartos = () => {
 
   useEffect(() => {
     loadData();
-    const roomsChannel = supabase
+    const ch = supabase
       .channel("rooms-public")
       .on("postgres_changes", { event: "*", schema: "public", table: "rooms" }, () => loadData())
       .on("postgres_changes", { event: "*", schema: "public", table: "room_images" }, () => loadData())
       .subscribe();
-    return () => { supabase.removeChannel(roomsChannel); };
+    return () => { supabase.removeChannel(ch); };
   }, []);
+
+  const filteredRooms = useMemo(() => {
+    if (!search.trim()) return rooms;
+    const q = search.toLowerCase();
+    return rooms.filter(
+      (r) =>
+        r.name.toLowerCase().includes(q) ||
+        (r.description ?? "").toLowerCase().includes(q) ||
+        r.beds.toLowerCase().includes(q) ||
+        r.amenities.some((a) => a.toLowerCase().includes(q))
+    );
+  }, [rooms, search]);
 
   const allImages: { src: string; alt: string }[] = [];
   rooms.forEach((room) => {
@@ -155,8 +163,32 @@ const Quartos = () => {
       <section className="py-16">
         <div className="container">
           <ScrollReveal>
-            <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-10">{t("quartos.tiposTitle")}</h2>
+            <h2 className="font-display text-2xl md:text-3xl font-bold text-center mb-6">{t("quartos.tiposTitle")}</h2>
           </ScrollReveal>
+
+          {/* Search */}
+          <div className="max-w-md mx-auto mb-8">
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+              <input
+                type="text"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                placeholder="Buscar por tipo, comodidade..."
+                className="w-full pl-10 pr-10 py-2.5 rounded-xl border bg-card focus:outline-none focus:ring-2 focus:ring-primary/40 text-sm transition-shadow"
+              />
+              {search && (
+                <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground">
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+            </div>
+            {search && (
+              <p className="text-xs text-muted-foreground mt-2 text-center">
+                {filteredRooms.length === 0 ? "Nenhum quarto encontrado." : `${filteredRooms.length} quarto(s) encontrado(s)`}
+              </p>
+            )}
+          </div>
 
           {loading ? (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -171,10 +203,17 @@ const Quartos = () => {
                 </div>
               ))}
             </div>
+          ) : filteredRooms.length === 0 ? (
+            <div className="text-center py-16 text-muted-foreground">
+              <Search className="w-10 h-10 mx-auto mb-3 opacity-40" />
+              <p>Nenhum quarto encontrado para &quot;{search}&quot;.</p>
+              <button onClick={() => setSearch("")} className="mt-3 text-sm text-primary underline">Limpar busca</button>
+            </div>
           ) : (
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 font-sans text-left">
-              {rooms.map((room, i) => {
-                const tr = getTranslatedRoom(i);
+              {filteredRooms.map((room, i) => {
+                const roomIdx = rooms.indexOf(room);
+                const tr = getTranslatedRoom(roomIdx);
                 return (
                   <ScrollReveal key={room.id} delay={i * 0.08} direction="up">
                     <div className={`rounded-lg border overflow-hidden transition-shadow hover:shadow-lg h-full flex flex-col ${room.highlight ? "border-primary bg-primary/5" : "bg-card"}`}>
