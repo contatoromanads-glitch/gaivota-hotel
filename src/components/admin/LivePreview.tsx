@@ -36,9 +36,9 @@ export const LivePreview = ({ children, title = "Pré-visualização" }: LivePre
           <div className="border rounded-xl overflow-hidden bg-background">
             <div className="bg-muted/50 border-b px-3 py-2 flex items-center gap-2">
               <div className="flex gap-1.5">
-                <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
-                <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
-                <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                <div className="w-2.5 h-2.5 rounded-full bg-destructive/70" />
+                <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/70" />
+                <div className="w-2.5 h-2.5 rounded-full bg-green-500/70" />
               </div>
               <span className="text-xs text-muted-foreground ml-2">Preview - {device === "desktop" ? "Desktop" : device === "tablet" ? "Tablet" : "Mobile"}</span>
             </div>
