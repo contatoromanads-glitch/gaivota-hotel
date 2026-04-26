@@ -7,9 +7,11 @@ import logoElo from "@/assets/logo-elo.png";
 import logoPix from "@/assets/logo-pix.png";
 import logoHipercard from "@/assets/logo-hipercard.png";
 import logoMastercard from "@/assets/logo-mastercard.png";
+import { useSiteContacts } from "@/hooks/useSiteContacts";
 
 const Footer = () => {
   const { t } = useTranslation();
+  const { contacts, waUrl } = useSiteContacts();
 
   return (
     <footer className="bg-foreground text-primary-foreground/80 text-base">
@@ -22,13 +24,13 @@ const Footer = () => {
             </Link>
             <p className="text-base leading-relaxed mb-4">{t("footer.tagline")}</p>
             <a
-              href="https://www.instagram.com/gaivotahotel_eldorado/"
+              href={contacts.instagram_url || "https://www.instagram.com/gaivotahotel_eldorado/"}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 text-accent hover:text-accent/80 transition-colors text-base"
             >
               <Instagram className="w-4 h-4" />
-              @gaivotahotel_eldorado
+              {contacts.instagram || "@gaivotahotel_eldorado"}
             </a>
           </div>
 
@@ -48,17 +50,21 @@ const Footer = () => {
           <div className="flex flex-col items-center">
             <h4 className="font-display text-lg font-semibold text-primary-foreground mb-4">{t("footer.contato")}</h4>
             <div className="flex flex-col items-center gap-3 text-base">
-              <a href="tel:+5594992854456" className="flex items-center gap-2 hover:text-accent transition-colors">
+              <a href={`tel:+${contacts.whatsapp}`} className="flex items-center gap-2 hover:text-accent transition-colors">
                 <Phone className="w-4 h-4 text-accent" />
-                (94) 99285-4456
+                {contacts.phone}
               </a>
-              <a href="mailto:gaivotahotelpara@gmail.com" className="flex items-center gap-2 hover:text-accent transition-colors">
+              <a href={`mailto:${contacts.email}`} className="flex items-center gap-2 hover:text-accent transition-colors">
                 <Mail className="w-4 h-4 text-accent" />
-                gaivotahotelpara@gmail.com
+                {contacts.email}
               </a>
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-accent mt-0.5 shrink-0" />
-                <span>Av. São Geraldo n. 4, Centro<br />Eldorado dos Carajás, PA<br />CEP 68524-000</span>
+                <span>
+                  {contacts.address}<br />
+                  {contacts.city}, {contacts.state}<br />
+                  CEP {contacts.cep}
+                </span>
               </div>
             </div>
           </div>
