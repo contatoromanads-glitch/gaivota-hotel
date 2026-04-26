@@ -41,9 +41,8 @@ const AdminReviews = () => {
         { event: "INSERT", schema: "public", table: "reviews" },
         (payload) => {
           const newReview = payload.new as Review;
-          const status = (newReview as any).status || "approved";
-          setReviews((prev) => [...prev, { ...newReview, status }]);
-          if (status === "pending") {
+          setReviews((prev) => [...prev, newReview]);
+          if (!newReview.is_visible) {
             toast.info(`Nova avaliação de ${newReview.guest_name} aguarda aprovação!`, {
               icon: "🔔",
               duration: 6000,
