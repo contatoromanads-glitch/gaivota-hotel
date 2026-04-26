@@ -74,8 +74,8 @@ const Quartos = () => {
       setRooms(roomsRes.data.map((r) => ({
         ...r,
         amenities: (r.amenities as string[]) || [],
-        price: r.price ?? null,
-        show_price: r.show_price ?? true,
+        price: null,
+        show_price: false,
       })));
     }
     if (imagesRes.data) {

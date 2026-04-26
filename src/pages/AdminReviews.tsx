@@ -12,11 +12,10 @@ interface Review {
   text: string;
   is_visible: boolean;
   display_order: number;
-  status: string;
 }
 
 const emptyReview = (): Partial<Review> => ({
-  guest_name: "", source: "Google", rating: 5, text: "", is_visible: true, display_order: 0, status: "approved",
+  guest_name: "", source: "Google", rating: 5, text: "", is_visible: true, display_order: 0,
 });
 
 const AdminReviews = () => {
@@ -28,7 +27,7 @@ const AdminReviews = () => {
 
   const load = useCallback(async () => {
     const { data } = await supabase.from("reviews").select("*").order("display_order");
-    if (data) setReviews(data.map((r) => ({ ...r, status: (r as any).status || "approved" })));
+    if (data) setReviews(data as Review[]);
   }, []);
 
   useEffect(() => {
@@ -42,9 +41,8 @@ const AdminReviews = () => {
         { event: "INSERT", schema: "public", table: "reviews" },
         (payload) => {
           const newReview = payload.new as Review;
-          const status = (newReview as any).status || "approved";
-          setReviews((prev) => [...prev, { ...newReview, status }]);
-          if (status === "pending") {
+          setReviews((prev) => [...prev, newReview]);
+          if (!newReview.is_visible) {
             toast.info(`Nova avaliação de ${newReview.guest_name} aguarda aprovação!`, {
               icon: "🔔",
               duration: 6000,
@@ -78,8 +76,8 @@ const AdminReviews = () => {
     return () => { supabase.removeChannel(channel); };
   }, [load]);
 
-  const approved = reviews.filter((r) => r.status === "approved");
-  const pending = reviews.filter((r) => r.status === "pending");
+  const approved = reviews.filter((r) => r.is_visible);
+  const pending = reviews.filter((r) => !r.is_visible);
   const displayed = activeTab === "approved" ? approved : pending;
 
   const handleSave = async () => {
@@ -91,7 +89,6 @@ const AdminReviews = () => {
       text: editing.text,
       is_visible: editing.is_visible ?? true,
       display_order: editing.display_order || 0,
-      status: editing.status || "approved",
     };
     if (isNew) {
       const { error } = await supabase.from("reviews").insert(payload);
@@ -120,14 +117,14 @@ const AdminReviews = () => {
   };
 
   const handleApprove = async (review: Review) => {
-    setReviews((prev) => prev.map((r) => r.id === review.id ? { ...r, status: "approved", is_visible: true } : r));
-    await supabase.from("reviews").update({ status: "approved", is_visible: true }).eq("id", review.id);
+    setReviews((prev) => prev.map((r) => r.id === review.id ? { ...r, is_visible: true } : r));
+    await supabase.from("reviews").update({ is_visible: true }).eq("id", review.id);
     toast.success("Avaliação aprovada e publicada no site!");
   };
 
   const handleReject = async (review: Review) => {
-    setReviews((prev) => prev.map((r) => r.id === review.id ? { ...r, status: "rejected", is_visible: false } : r));
-    await supabase.from("reviews").update({ status: "rejected", is_visible: false }).eq("id", review.id);
+    setReviews((prev) => prev.map((r) => r.id === review.id ? { ...r, is_visible: false } : r));
+    await supabase.from("reviews").update({ is_visible: false }).eq("id", review.id);
     toast.success("Avaliação rejeitada e ocultada do site.");
   };
 
@@ -249,22 +246,11 @@ const AdminReviews = () => {
                     <p className="font-semibold text-sm">{r.guest_name}</p>
                     <span className="text-xs text-muted-foreground">{r.source}</span>
                     <div className="flex">{Array.from({ length: r.rating }).map((_, i) => (<Star key={i} className="w-3 h-3 fill-accent text-accent" />))}</div>
-                    {r.status === "pending" && <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-medium flex items-center gap-1"><Clock className="w-3 h-3" /> Pendente</span>}
-                    {r.status === "rejected" && <span className="text-xs bg-red-100 text-red-700 px-2 py-0.5 rounded-full font-medium">Rejeitada</span>}
+                    {!r.is_visible && <span className="text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full font-medium flex items-center gap-1"><Clock className="w-3 h-3" /> Oculta</span>}
                   </div>
                   <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{r.text}</p>
                 </div>
                 <div className="flex gap-1 ml-2 flex-shrink-0">
-                  {r.status === "pending" && (
-                    <>
-                      <button onClick={() => handleApprove(r)} className="p-2 rounded-lg hover:bg-green-50 text-green-600" title="Aprovar e publicar">
-                        <CheckCircle className="w-4 h-4" />
-                      </button>
-                      <button onClick={() => handleReject(r)} className="p-2 rounded-lg hover:bg-red-50 text-red-500" title="Rejeitar">
-                        <XCircle className="w-4 h-4" />
-                      </button>
-                    </>
-                  )}
                   <button onClick={() => toggleVisibility(r)} className="p-2 rounded-lg hover:bg-muted" title={r.is_visible ? "Ocultar" : "Mostrar"}>
                     {r.is_visible ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
                   </button>
