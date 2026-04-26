@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import Layout from "@/components/Layout";
-import { ReviewsCarousel } from "@/components/ReviewsSection";
+import { ReviewsCarousel, PublicReviewForm } from "@/components/ReviewsSection";
 import { ScrollReveal } from "@/hooks/useScrollReveal";
 import ImageLightbox from "@/components/ImageLightbox";
 import { supabase } from "@/integrations/supabase/client";
-import { WHATSAPP_URL } from "@/lib/constants";
+import { useSiteContacts } from "@/hooks/useSiteContacts";
 import { ArrowLeft, BedDouble, Maximize, CheckCircle, Phone } from "lucide-react";
 import hotelCorredor from "@/assets/hotel-corredor.png";
 
@@ -38,6 +38,7 @@ const QuartoDetalhe = () => {
   const [roomImages, setRoomImages] = useState<RoomImage[]>([]);
   const [loading, setLoading] = useState(true);
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+  const { waUrl } = useSiteContacts();
 
   useEffect(() => {
     if (!id) return;
@@ -47,18 +48,20 @@ const QuartoDetalhe = () => {
         supabase.from("room_images").select("*").eq("room_id", id).order("display_order"),
       ]);
       if (roomRes.data) {
-        setRoom({ ...roomRes.data, amenities: (roomRes.data.amenities as string[]) || [], price: (roomRes.data as any).price ?? null, show_price: (roomRes.data as any).show_price ?? true });
+        const r = roomRes.data;
+        setRoom({ ...r, amenities: (r.amenities as string[]) || [], price: (r as any).price ?? null, show_price: (r as any).show_price ?? true });
+        document.title = `${r.name} — Gaivota Hotel`;
       }
       if (imagesRes.data) setRoomImages(imagesRes.data);
       setLoading(false);
     };
     fetchRoom();
+    return () => { document.title = "Gaivota Hotel — Seu Refúgio Amazônico em Eldorado dos Carajás"; };
   }, [id]);
 
   const heroImage = roomImages.length > 0 ? roomImages[0].image_url : hotelCorredor;
   const allImages = roomImages.map((img) => ({ src: img.image_url, alt: img.alt_text || (room?.name ?? "") }));
-  const whatsappMsg = encodeURIComponent("Ola! Vim do site e gostaria de fazer uma reserva para o quarto " + (room?.name ?? "") + ". Poderia me ajudar?");
-  const whatsappLink = "https://wa.me/5594992854456?text=" + whatsappMsg;
+  const whatsappLink = waUrl(`Olá! Vim do site e gostaria de fazer uma reserva para o quarto ${room?.name ?? ""}. Poderia me ajudar?`);
 
   if (loading) {
     return (
@@ -79,8 +82,8 @@ const QuartoDetalhe = () => {
       <Layout>
         <div className="min-h-screen flex items-center justify-center text-center px-4">
           <div>
-            <h1 className="font-display text-3xl font-bold mb-4">Quarto nao encontrado</h1>
-            <p className="text-muted-foreground mb-6">O quarto solicitado nao existe ou foi removido.</p>
+            <h1 className="font-display text-3xl font-bold mb-4">Quarto não encontrado</h1>
+            <p className="text-muted-foreground mb-6">O quarto solicitado não existe ou foi removido.</p>
             <Link to="/quartos" className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-6 py-3 rounded-md font-semibold">
               <ArrowLeft className="w-4 h-4" /> Ver todos os quartos
             </Link>
@@ -184,9 +187,9 @@ const QuartoDetalhe = () => {
                   <p className="text-muted-foreground text-sm mb-4">Entre em contato pelo WhatsApp e garanta sua reserva com facilidade.</p>
                   {room.show_price && room.price != null && (
                     <div className="bg-secondary/5 border border-secondary/20 rounded-xl p-4 mb-4 text-center">
-                      <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">Diaria a partir de</p>
+                      <p className="text-xs text-muted-foreground uppercase tracking-widest mb-1">Diária a partir de</p>
                       <p className="font-display text-3xl font-bold text-secondary">{formatPrice(room.price)}</p>
-                      <p className="text-xs text-muted-foreground mt-1">Consulte disponibilidade e promocoes</p>
+                      <p className="text-xs text-muted-foreground mt-1">Consulte disponibilidade e promoções</p>
                     </div>
                   )}
                   <a
@@ -200,7 +203,7 @@ const QuartoDetalhe = () => {
                   <Link to="/quartos" className="w-full flex items-center justify-center gap-2 border py-3 rounded-xl text-sm font-medium hover:bg-muted transition-colors">
                     <ArrowLeft className="w-4 h-4" /> Ver outros quartos
                   </Link>
-                  <p className="text-xs text-muted-foreground text-center mt-4">Preco sujeito a alteracao conforme temporada e disponibilidade.</p>
+                  <p className="text-xs text-muted-foreground text-center mt-4">Preço sujeito a alteração conforme temporada e disponibilidade.</p>
                 </div>
               </ScrollReveal>
             </div>
@@ -209,6 +212,14 @@ const QuartoDetalhe = () => {
       </section>
 
       <ReviewsCarousel />
+
+      {/* Public review form */}
+      <section className="py-16 bg-warm">
+        <div className="container max-w-xl">
+          <h2 className="font-display text-2xl font-bold text-center mb-8">Deixe sua avaliação</h2>
+          <PublicReviewForm />
+        </div>
+      </section>
 
       {lightboxIndex !== null && allImages.length > 0 && (
         <ImageLightbox images={allImages} initialIndex={lightboxIndex} onClose={() => setLightboxIndex(null)} />
