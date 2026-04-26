@@ -3,12 +3,13 @@ import { useTranslation } from "react-i18next";
 import Layout from "@/components/Layout";
 import { Phone, Mail, MapPin, Instagram, Send } from "lucide-react";
 import { ReviewsCarousel } from "@/components/ReviewsSection";
-import { WHATSAPP_URL } from "@/lib/constants";
 import { ScrollReveal } from "@/hooks/useScrollReveal";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import { useSiteContacts } from "@/hooks/useSiteContacts";
 
 const Contatos = () => {
   const { t } = useTranslation();
+  const { contacts, waUrl } = useSiteContacts();
   const [form, setForm] = useState({ nome: "", email: "", telefone: "", mensagem: "" });
 
   const faqData = Array.from({ length: 6 }, (_, i) => ({
@@ -21,8 +22,12 @@ const Contatos = () => {
     const msg = encodeURIComponent(
       t("contatos.whatsappMsg", { nome: form.nome, email: form.email, telefone: form.telefone, mensagem: form.mensagem })
     );
-    window.open(`https://wa.me/5594992854456?text=${msg}`, "_blank");
+    window.open(`https://wa.me/${contacts.whatsapp}?text=${msg}`, "_blank");
   };
+
+  const mapsUrl =
+    contacts.maps_embed_url ||
+    "https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3975.123!2d-49.319!3d-6.342!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2sGaivota+Hotel!5e0!3m2!1spt-BR!2sbr!4v1600000000000";
 
   return (
     <Layout>
@@ -41,22 +46,22 @@ const Contatos = () => {
             <ScrollReveal direction="left">
               <h2 className="font-display text-2xl font-bold mb-6">{t("contatos.infoTitle")}</h2>
               <div className="space-y-5">
-                <a href="tel:+5594992854456" className="flex items-center gap-4 group">
+                <a href={`tel:+${contacts.whatsapp}`} className="flex items-center gap-4 group">
                   <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
                     <Phone className="w-5 h-5 text-primary" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">{t("contatos.reservasWhatsapp")}</p>
-                    <p className="font-semibold">(94) 99285-4456</p>
+                    <p className="font-semibold">{contacts.phone}</p>
                   </div>
                 </a>
-                <a href="mailto:gaivotahotelpara@gmail.com" className="flex items-center gap-4 group">
+                <a href={`mailto:${contacts.email}`} className="flex items-center gap-4 group">
                   <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 group-hover:scale-110 transition-all duration-300">
                     <Mail className="w-5 h-5 text-primary" />
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">{t("contatos.email")}</p>
-                    <p className="font-semibold">gaivotahotelpara@gmail.com</p>
+                    <p className="font-semibold">{contacts.email}</p>
                   </div>
                 </a>
                 <div className="flex items-center gap-4">
@@ -65,12 +70,12 @@ const Contatos = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">{t("contatos.endereco")}</p>
-                    <p className="font-semibold">Av. São Geraldo n. 4, Centro</p>
-                    <p className="text-sm text-muted-foreground">Eldorado dos Carajás, PA — CEP 68524-000</p>
+                    <p className="font-semibold">{contacts.address}</p>
+                    <p className="text-sm text-muted-foreground">{contacts.city}, {contacts.state} — CEP {contacts.cep}</p>
                   </div>
                 </div>
                 <a
-                  href="https://www.instagram.com/gaivotahotel_eldorado/"
+                  href={contacts.instagram_url || "https://www.instagram.com/gaivotahotel_eldorado/"}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center gap-4 group"
@@ -80,7 +85,7 @@ const Contatos = () => {
                   </div>
                   <div>
                     <p className="text-sm text-muted-foreground">{t("contatos.instagram")}</p>
-                    <p className="font-semibold">@gaivotahotel_eldorado</p>
+                    <p className="font-semibold">{contacts.instagram || "@gaivotahotel_eldorado"}</p>
                   </div>
                 </a>
               </div>
@@ -132,7 +137,7 @@ const Contatos = () => {
       <section className="h-[400px]">
         <iframe
           title="Localização Gaivota Hotel"
-          src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=Gaivota+Hotel,Eldorado+dos+Carajás,PA,Brazil&zoom=16"
+          src={mapsUrl}
           className="w-full h-full border-0"
           allowFullScreen
           loading="lazy"
