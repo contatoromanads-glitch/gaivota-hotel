@@ -1,15 +1,16 @@
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { WHATSAPP_URL } from "@/lib/constants";
 import { Menu, X, Phone } from "lucide-react";
 import logoGaivota from "@/assets/logo-gaivota.png";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { useSiteContacts } from "@/hooks/useSiteContacts";
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
   const { t } = useTranslation();
+  const { waUrl } = useSiteContacts();
 
   const navItems = [
     { label: t("nav.home"), path: "/" },
@@ -41,7 +42,7 @@ const Header = () => {
           ))}
           <LanguageSwitcher />
           <a
-            href={WHATSAPP_URL}
+            href={waUrl()}
             target="_blank"
             rel="noopener noreferrer"
             className="cta-pulse flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-md text-sm font-semibold"
@@ -77,7 +78,7 @@ const Header = () => {
           ))}
           <div className="px-6 pt-2">
             <a
-              href={WHATSAPP_URL}
+              href={waUrl()}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center justify-center gap-2 bg-primary text-primary-foreground px-4 py-3 rounded-md text-sm font-semibold"
