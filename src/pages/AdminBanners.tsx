@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { supabase } from "@/integrations/supabase/client";
-import { Plus, Pencil, Trash2, X, Upload, Image as ImageIcon, Info, Loader2, Eye, EyeOff } from "lucide-react";
+import { Plus, Pencil, Trash2, X, Upload, Image as ImageIcon, Info, Loader2, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { toast } from "sonner";
+import hotelFachada from "@/assets/hotel-fachada.png";
+import hotelCorredor from "@/assets/hotel-corredor.png";
 
 interface Banner {
   id: string;
@@ -28,6 +30,12 @@ const pages = [
   { value: "politica", label: "Política" },
 ];
 
+// Imagens padrão por página (usadas quando não há upload)
+const defaultImages: Record<string, string> = {
+  home: hotelFachada,
+  quartos: hotelCorredor,
+};
+
 const AdminBanners = () => {
   const [banners, setBanners] = useState<Banner[]>([]);
   const [editing, setEditing] = useState<Partial<Banner> | null>(null);
@@ -43,10 +51,7 @@ const AdminBanners = () => {
   useEffect(() => { load(); }, []);
 
   const handleImageUpload = async (file: File) => {
-    if (file.size > 10 * 1024 * 1024) {
-      toast.error("A imagem é maior que 10MB. Reduza o tamanho antes.");
-      return;
-    }
+    if (file.size > 10 * 1024 * 1024) { toast.error("A imagem é maior que 10MB. Reduza o tamanho antes."); return; }
     setUploading(true);
     const ext = file.name.split(".").pop();
     const path = `banners/${Date.now()}-${Math.random().toString(36).slice(2, 7)}.${ext}`;
@@ -77,7 +82,6 @@ const AdminBanners = () => {
       is_active: editing.is_active ?? true,
       display_order: editing.display_order || 0,
     };
-
     if (isNew) {
       const { error } = await supabase.from("banners").insert(payload);
       if (error) { toast.error(error.message); return; }
@@ -108,7 +112,6 @@ const AdminBanners = () => {
     toast.success(banner.is_active ? "Banner oculto do site." : "Banner publicado no site.");
   };
 
-  // Group by page
   const grouped = banners.reduce((acc, b) => {
     if (!acc[b.page]) acc[b.page] = [];
     acc[b.page].push(b);
@@ -116,6 +119,12 @@ const AdminBanners = () => {
   }, {} as Record<string, Banner[]>);
 
   const pageLabel = (slug: string) => pages.find((p) => p.value === slug)?.label || slug;
+
+  // Miniatura exibida no card: imagem do Supabase se tiver, senão a padrão do código
+  const getThumb = (b: Banner) => b.image_url || defaultImages[b.page] || null;
+
+  const currentEditorImage = editing?.image_url || "";
+  const currentEditorDefault = defaultImages[editing?.page || "home"] || null;
 
   return (
     <AdminLayout>
@@ -140,7 +149,7 @@ const AdminBanners = () => {
           </div>
         </div>
 
-        {/* Editor */}
+        {/* Editor modal */}
         {editing && (
           <div className="fixed inset-0 bg-black/60 z-50 flex items-end sm:items-center justify-center sm:p-4" onClick={() => { setEditing(null); setIsNew(false); }}>
             <div className="bg-card rounded-t-2xl sm:rounded-2xl border shadow-2xl w-full sm:max-w-lg max-h-[92vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
@@ -165,30 +174,57 @@ const AdminBanners = () => {
                   <p className="text-xs text-muted-foreground mb-1">Texto menor abaixo do título (opcional).</p>
                   <input value={editing.subtitle || ""} onChange={(e) => setEditing({ ...editing, subtitle: e.target.value })} className="w-full px-3 py-2 rounded-md border bg-background focus:ring-2 focus:ring-primary/30 focus:outline-none" />
                 </div>
+
+                {/* Image section */}
                 <div>
                   <label className="text-sm font-semibold">Imagem de fundo</label>
-                  {editing.image_url ? (
+
+                  {currentEditorImage ? (
+                    /* Imagem já enviada para o Supabase */
                     <div className="relative mt-1">
-                      <img src={editing.image_url} alt="Pré-visualização" className="w-full h-40 object-cover rounded-lg border" />
+                      <img src={currentEditorImage} alt="Pré-visualização" className="w-full h-40 object-cover rounded-lg border" />
+                      <div className="absolute top-2 left-2 bg-green-600 text-white text-[10px] font-bold px-2 py-0.5 rounded">✓ Imagem personalizada</div>
                       <button onClick={removeBannerImage} className="absolute top-2 right-2 bg-destructive text-white rounded-full p-1 shadow-lg" title="Remover imagem">
                         <X className="w-4 h-4" />
                       </button>
                     </div>
+                  ) : currentEditorDefault ? (
+                    /* Sem imagem personalizada — mostra a padrão como referência */
+                    <div className="mt-1 space-y-2">
+                      <div className="relative rounded-lg overflow-hidden border-2 border-dashed border-amber-400">
+                        <img src={currentEditorDefault} alt="Imagem padrão atual" className="w-full h-40 object-cover opacity-70" />
+                        <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/40 text-white text-center px-4">
+                          <AlertCircle className="w-6 h-6 text-amber-300 mb-1" />
+                          <p className="text-xs font-bold text-amber-200">Esta é a imagem padrão atual do site</p>
+                          <p className="text-[10px] text-white/80 mt-1">Faça upload abaixo para substituí-la por uma foto personalizada</p>
+                        </div>
+                      </div>
+                      <label className="flex items-center justify-center gap-2 px-4 py-3 border-2 border-dashed rounded-lg cursor-pointer hover:bg-primary/5 hover:border-primary/40 transition-colors">
+                        {uploading ? (
+                          <><Loader2 className="w-5 h-5 animate-spin text-primary" /><span className="text-sm">Enviando…</span></>
+                        ) : (
+                          <><Upload className="w-5 h-5 text-muted-foreground" /><span className="text-sm font-semibold">Clique para enviar nova imagem</span><span className="text-xs text-muted-foreground ml-1">(JPG, PNG · até 10MB)</span></>
+                        )}
+                        <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0])} />
+                      </label>
+                    </div>
                   ) : (
+                    /* Sem imagem padrão disponível */
                     <label className="mt-1 flex flex-col items-center justify-center gap-2 px-4 py-8 border-2 border-dashed rounded-lg cursor-pointer hover:bg-primary/5 hover:border-primary/40 transition-colors">
                       {uploading ? (
-                        <><Loader2 className="w-5 h-5 animate-spin text-primary" /> <span className="text-sm">Enviando…</span></>
+                        <><Loader2 className="w-5 h-5 animate-spin text-primary" /><span className="text-sm">Enviando…</span></>
                       ) : (
-                        <><Upload className="w-6 h-6 text-muted-foreground" /> <span className="text-sm font-semibold">Clique para enviar uma imagem</span><span className="text-xs text-muted-foreground">JPG, PNG ou WebP — até 10MB</span></>
+                        <><Upload className="w-6 h-6 text-muted-foreground" /><span className="text-sm font-semibold">Clique para enviar uma imagem</span><span className="text-xs text-muted-foreground">JPG, PNG ou WebP — até 10MB</span></>
                       )}
                       <input type="file" accept="image/*" className="hidden" onChange={(e) => e.target.files?.[0] && handleImageUpload(e.target.files[0])} />
                     </label>
                   )}
                 </div>
+
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="text-sm font-semibold">Texto do botão</label>
-                    <p className="text-xs text-muted-foreground mb-1">Ex: "Reservar"</p>
+                    <label className="text-sm font-semibold">Texto do botão extra</label>
+                    <p className="text-xs text-muted-foreground mb-1">Ex: "Promoção especial"</p>
                     <input value={editing.cta_text || ""} onChange={(e) => setEditing({ ...editing, cta_text: e.target.value })} className="w-full px-3 py-2 rounded-md border bg-background focus:ring-2 focus:ring-primary/30 focus:outline-none" />
                   </div>
                   <div>
@@ -197,6 +233,7 @@ const AdminBanners = () => {
                     <input value={editing.cta_url || ""} onChange={(e) => setEditing({ ...editing, cta_url: e.target.value })} className="w-full px-3 py-2 rounded-md border bg-background focus:ring-2 focus:ring-primary/30 focus:outline-none" placeholder="/quartos ou https://..." />
                   </div>
                 </div>
+
                 <label className="flex items-center gap-3 p-3 bg-muted/40 rounded-lg cursor-pointer hover:bg-muted/70">
                   <input type="checkbox" checked={editing.is_active ?? true} onChange={(e) => setEditing({ ...editing, is_active: e.target.checked })} className="rounded w-4 h-4" />
                   <div className="flex-1">
@@ -213,7 +250,7 @@ const AdminBanners = () => {
           </div>
         )}
 
-        {/* Confirm */}
+        {/* Confirm delete */}
         {confirmDelete && (
           <div className="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4" onClick={() => setConfirmDelete(null)}>
             <div className="bg-card rounded-2xl border shadow-2xl w-full max-w-sm p-6" onClick={(e) => e.stopPropagation()}>
@@ -232,6 +269,7 @@ const AdminBanners = () => {
           </div>
         )}
 
+        {/* List */}
         {banners.length === 0 ? (
           <div className="text-center py-16 bg-card border-2 border-dashed rounded-2xl">
             <ImageIcon className="w-14 h-14 mx-auto mb-3 text-muted-foreground/40" />
@@ -249,29 +287,46 @@ const AdminBanners = () => {
                   {pageLabel(page)} ({items.length})
                 </h3>
                 <div className="space-y-2">
-                  {items.map((b) => (
-                    <div key={b.id} className={`bg-card border rounded-xl p-4 flex gap-4 hover:shadow-sm transition-shadow ${!b.is_active ? "opacity-60" : ""}`}>
-                      {b.image_url ? (
-                        <img src={b.image_url} alt={b.title} className="w-24 h-16 object-cover rounded-lg flex-shrink-0" />
-                      ) : (
-                        <div className="w-24 h-16 bg-muted rounded-lg flex items-center justify-center flex-shrink-0">
-                          <ImageIcon className="w-5 h-5 text-muted-foreground/50" />
+                  {items.map((b) => {
+                    const thumb = getThumb(b);
+                    const isDefault = !b.image_url && !!thumb;
+                    return (
+                      <div key={b.id} className={`bg-card border rounded-xl p-4 flex gap-4 hover:shadow-sm transition-shadow ${!b.is_active ? "opacity-60" : ""}`}>
+                        {/* Thumbnail */}
+                        <div className="relative flex-shrink-0">
+                          {thumb ? (
+                            <img src={thumb} alt={b.title} className="w-24 h-16 object-cover rounded-lg" />
+                          ) : (
+                            <div className="w-24 h-16 bg-muted rounded-lg flex items-center justify-center">
+                              <ImageIcon className="w-5 h-5 text-muted-foreground/50" />
+                            </div>
+                          )}
+                          {isDefault && (
+                            <span className="absolute -bottom-1 -right-1 bg-amber-400 text-amber-900 text-[8px] font-bold px-1 rounded leading-tight">padrão</span>
+                          )}
                         </div>
-                      )}
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-sm truncate">{b.title}</p>
-                        {b.subtitle && <p className="text-xs text-muted-foreground truncate">{b.subtitle}</p>}
-                        {!b.is_active && <span className="inline-block mt-1 text-[10px] uppercase font-bold text-muted-foreground bg-muted px-1.5 py-0.5 rounded">Oculto</span>}
+
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                          <p className="font-semibold text-sm truncate">{b.title}</p>
+                          {b.subtitle && <p className="text-xs text-muted-foreground truncate">{b.subtitle}</p>}
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {!b.is_active && <span className="text-[10px] uppercase font-bold text-muted-foreground bg-muted px-1.5 py-0.5 rounded">Oculto</span>}
+                            {isDefault && <span className="text-[10px] text-amber-700 bg-amber-50 border border-amber-200 px-1.5 py-0.5 rounded">📷 Usando imagem padrão — clique em editar para trocar</span>}
+                          </div>
+                        </div>
+
+                        {/* Actions */}
+                        <div className="flex gap-1 flex-shrink-0">
+                          <button onClick={() => toggleActive(b)} title={b.is_active ? "Ocultar do site" : "Mostrar no site"} className="p-2 rounded-lg hover:bg-muted transition-colors">
+                            {b.is_active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+                          </button>
+                          <button onClick={() => { setEditing(b); setIsNew(false); }} title="Editar" className="p-2 rounded-lg hover:bg-muted transition-colors"><Pencil className="w-4 h-4" /></button>
+                          <button onClick={() => setConfirmDelete(b)} title="Excluir" className="p-2 rounded-lg hover:bg-destructive/10 text-destructive transition-colors"><Trash2 className="w-4 h-4" /></button>
+                        </div>
                       </div>
-                      <div className="flex gap-1 flex-shrink-0">
-                        <button onClick={() => toggleActive(b)} title={b.is_active ? "Ocultar do site" : "Mostrar no site"} className="p-2 rounded-lg hover:bg-muted transition-colors">
-                          {b.is_active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                        </button>
-                        <button onClick={() => { setEditing(b); setIsNew(false); }} title="Editar" className="p-2 rounded-lg hover:bg-muted transition-colors"><Pencil className="w-4 h-4" /></button>
-                        <button onClick={() => setConfirmDelete(b)} title="Excluir" className="p-2 rounded-lg hover:bg-destructive/10 text-destructive transition-colors"><Trash2 className="w-4 h-4" /></button>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </div>
             ))}
