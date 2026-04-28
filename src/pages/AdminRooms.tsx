@@ -1,7 +1,8 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import AdminLayout from "@/components/admin/AdminLayout";
 import { supabase } from "@/integrations/supabase/client";
 import { Plus, Pencil, Trash2, X, Upload, BedDouble, Image as ImageIcon, Info, Loader2, Star, DollarSign, Eye, EyeOff } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "sonner";
 
 interface Room {
@@ -39,21 +40,42 @@ const AdminRooms = () => {
   const [amenityInput, setAmenityInput] = useState("");
   const [uploadingFor, setUploadingFor] = useState<string | null>(null);
   const [confirmDelete, setConfirmDelete] = useState<{ type: "room" | "image"; id: string; label: string } | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
-  const load = async () => {
-    const { data: rms } = await supabase.from("rooms").select("*").order("display_order");
-    if (rms) {
-      setRooms(rms.map((r) => ({ ...r, amenities: (r.amenities as string[]) || [], price: (r as any).price ?? null, show_price: (r as any).show_price ?? true })));
-      const { data: imgs } = await supabase.from("room_images").select("*").order("display_order");
+  const load = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const { data: rms, error: rErr } = await supabase.from("rooms").select("*").order("display_order");
+      if (rErr) throw rErr;
+      if (!rms) {
+        setRooms([]);
+        toast.error("Não foi possível carregar a lista de quartos.");
+        return;
+      }
+      setRooms(rms.map((r) => ({
+        ...r,
+        amenities: (r.amenities as string[]) || [],
+        price: r.price ?? null,
+        show_price: r.show_price ?? true,
+      })));
+      const { data: imgs, error: iErr } = await supabase.from("room_images").select("*").order("display_order");
+      if (iErr) throw iErr;
       if (imgs) {
         const grouped: Record<string, RoomImage[]> = {};
         imgs.forEach((img) => { if (!grouped[img.room_id]) grouped[img.room_id] = []; grouped[img.room_id].push(img); });
         setImages(grouped);
-      } else { setImages({}); }
+      } else {
+        setImages({});
+      }
+    } catch (err: any) {
+      setRooms([]);
+      toast.error("Erro ao carregar quartos: " + (err?.message ?? "desconhecido"));
+    } finally {
+      setIsLoading(false);
     }
-  };
+  }, []);
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => { load(); }, [load]);
 
   const handleSave = async () => {
     if (!editing?.name) { toast.error("Por favor, informe o nome do quarto"); return; }
@@ -243,14 +265,25 @@ const AdminRooms = () => {
         )}
 
         <div className="space-y-4">
-          {rooms.length === 0 && (
+          {isLoading && (
+            <>
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="bg-card border rounded-xl p-5 space-y-3">
+                  <Skeleton className="h-5 w-1/3" />
+                  <Skeleton className="h-4 w-1/2" />
+                  <Skeleton className="h-20 w-full" />
+                </div>
+              ))}
+            </>
+          )}
+          {!isLoading && rooms.length === 0 && (
             <div className="text-center py-16 bg-card border-2 border-dashed rounded-2xl">
               <BedDouble className="w-14 h-14 mx-auto mb-3 text-muted-foreground/40" />
               <p className="font-semibold mb-1">Nenhum quarto cadastrado ainda</p>
               <button onClick={() => { setEditing(emptyRoom()); setIsNew(true); }} className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-4 py-2 rounded-lg text-sm font-semibold mt-2"><Plus className="w-4 h-4" /> Adicionar primeiro quarto</button>
             </div>
           )}
-          {rooms.map((room) => {
+          {!isLoading && rooms.map((room) => {
             const roomImgs = images[room.id] || [];
             return (
               <div key={room.id} className="bg-card border rounded-xl p-5 hover:shadow-sm transition-shadow">

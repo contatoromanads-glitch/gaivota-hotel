@@ -17,46 +17,45 @@ const AuthContext = createContext<AuthCtx>({
 
 export const useAuth = () => useContext(AuthContext);
 
+const checkAdmin = async (userId: string): Promise<boolean> => {
+  const { data } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", userId)
+    .eq("role", "admin")
+    .maybeSingle();
+  return !!data;
+};
+
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<User | null | undefined>(undefined);
   const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
 
-  const checkAdmin = async (userId: string) => {
-    const { data } = await supabase
-      .from("user_roles")
-      .select("role")
-      .eq("user_id", userId)
-      .eq("role", "admin")
-      .maybeSingle();
-    return !!data;
-  };
-
+  // Listen ONLY — never call Supabase queries inside this callback (deadlock).
   useEffect(() => {
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(async (_event, session) => {
-      const u = session?.user ?? null;
-      setUser(u);
-      if (u) {
-        const admin = await checkAdmin(u.id);
-        setIsAdmin(admin);
-      } else {
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+      if (!session?.user) {
         setIsAdmin(false);
+        setLoading(false);
       }
-      setLoading(false);
     });
-
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      const u = session?.user ?? null;
-      setUser(u);
-      if (u) {
-        const admin = await checkAdmin(u.id);
-        setIsAdmin(admin);
-      }
-      setLoading(false);
-    });
-
     return () => subscription.unsubscribe();
   }, []);
+
+  // React to user changes outside the auth callback to safely query DB.
+  useEffect(() => {
+    if (user === undefined) return;
+    if (!user) { setLoading(false); return; }
+    let cancelled = false;
+    checkAdmin(user.id).then((admin) => {
+      if (cancelled) return;
+      setIsAdmin(admin);
+      setLoading(false);
+    });
+    return () => { cancelled = true; };
+  }, [user]);
 
   const signIn = async (email: string, password: string): Promise<string | null> => {
     const { error } = await supabase.auth.signInWithPassword({ email, password });
@@ -70,7 +69,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAdmin, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ user: user ?? null, isAdmin, loading, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   );
