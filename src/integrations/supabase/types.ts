@@ -89,6 +89,7 @@ export type Database = {
           is_visible: boolean | null
           rating: number
           source: string | null
+          status: string | null
           text: string
         }
         Insert: {
@@ -99,6 +100,7 @@ export type Database = {
           is_visible?: boolean | null
           rating?: number
           source?: string | null
+          status?: string | null
           text: string
         }
         Update: {
@@ -109,6 +111,7 @@ export type Database = {
           is_visible?: boolean | null
           rating?: number
           source?: string | null
+          status?: string | null
           text?: string
         }
         Relationships: []
@@ -158,6 +161,8 @@ export type Database = {
           highlight: boolean | null
           id: string
           name: string
+          price: number | null
+          show_price: boolean
           size: string | null
           updated_at: string | null
         }
@@ -170,6 +175,8 @@ export type Database = {
           highlight?: boolean | null
           id?: string
           name: string
+          price?: number | null
+          show_price?: boolean
           size?: string | null
           updated_at?: string | null
         }
@@ -182,6 +189,8 @@ export type Database = {
           highlight?: boolean | null
           id?: string
           name?: string
+          price?: number | null
+          show_price?: boolean
           size?: string | null
           updated_at?: string | null
         }
